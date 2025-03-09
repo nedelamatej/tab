@@ -95,23 +95,23 @@ class Pitch {
   #[ORM\Column]
   private ?float $theta_t = null; ///< pitch final vertical angle [rad]
 
-  #[ORM\Column]
-  private ?float $x_1 = null; ///< pitch 1st control point x coordinate [m]
+  #[ORM\Column(nullable: true)]
+  private ?float $x_1 = null; ///< pitch 1st control point x coordinate [m] (optional)
 
-  #[ORM\Column]
-  private ?float $y_1 = null; ///< pitch 1st control point y coordinate [m]
+  #[ORM\Column(nullable: true)]
+  private ?float $y_1 = null; ///< pitch 1st control point y coordinate [m] (optional)
 
-  #[ORM\Column]
-  private ?float $z_1 = null; ///< pitch 1st control point z coordinate [m]
+  #[ORM\Column(nullable: true)]
+  private ?float $z_1 = null; ///< pitch 1st control point z coordinate [m] (optional)
 
-  #[ORM\Column]
-  private ?float $x_2 = null; ///< pitch 2nd control point x coordinate [m]
+  #[ORM\Column(nullable: true)]
+  private ?float $x_2 = null; ///< pitch 2nd control point x coordinate [m] (optional)
 
-  #[ORM\Column]
-  private ?float $y_2 = null; ///< pitch 2nd control point y coordinate [m]
+  #[ORM\Column(nullable: true)]
+  private ?float $y_2 = null; ///< pitch 2nd control point y coordinate [m] (optional)
 
-  #[ORM\Column]
-  private ?float $z_2 = null; ///< pitch 2nd control point z coordinate [m]
+  #[ORM\Column(nullable: true)]
+  private ?float $z_2 = null; ///< pitch 2nd control point z coordinate [m] (optional)
 
   /**
    * @brief Gets the pitch id
@@ -579,7 +579,7 @@ class Pitch {
    *
    * @return static self reference
    */
-  public function setX_1(float $x_1): static {
+  public function setX_1(?float $x_1): static {
     $this->x_1 = $x_1;
 
     return $this;
@@ -601,7 +601,7 @@ class Pitch {
    *
    * @return static self reference
    */
-  public function setY_1(float $y_1): static {
+  public function setY_1(?float $y_1): static {
     $this->y_1 = $y_1;
 
     return $this;
@@ -616,7 +616,7 @@ class Pitch {
     return $this->z_1;
   }
 
-  public function setZ_1(float $z_1): static {
+  public function setZ_1(?float $z_1): static {
     $this->z_1 = $z_1;
 
     return $this;
@@ -638,7 +638,7 @@ class Pitch {
    *
    * @return static self reference
    */
-  public function setX_2(float $x_2): static {
+  public function setX_2(?float $x_2): static {
     $this->x_2 = $x_2;
 
     return $this;
@@ -660,7 +660,7 @@ class Pitch {
    *
    * @return static self reference
    */
-  public function setY_2(float $y_2): static {
+  public function setY_2(?float $y_2): static {
     $this->y_2 = $y_2;
 
     return $this;
@@ -682,7 +682,7 @@ class Pitch {
    *
    * @return static self reference
    */
-  public function setZ_2(float $z_2): static {
+  public function setZ_2(?float $z_2): static {
     $this->z_2 = $z_2;
 
     return $this;
