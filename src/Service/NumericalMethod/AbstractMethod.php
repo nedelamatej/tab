@@ -13,7 +13,7 @@
 
 /**
  * @file
- * @brief AbstractMethod abstract class
+ * @brief Abstract numerical method class
  *
  * @author Matej Nedela
  */
@@ -21,7 +21,7 @@
 namespace App\Service\NumericalMethod;
 
 /**
- * AbstractMethod abstract class
+ * @brief Abstract numerical method class
  */
 abstract class AbstractMethod {
   protected int $n;   ///< number of steps

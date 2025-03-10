@@ -13,7 +13,7 @@
 
 /**
  * @file
- * @brief EulerMethod class
+ * @brief Euler numerical method class
  *
  * @author Matej Nedela
  */
@@ -23,7 +23,7 @@ namespace App\Service\NumericalMethod;
 use App\Service\NumericalMethod\AbstractMethod;
 
 /**
- * EulerMethod class
+ * @brief Euler numerical method class
  */
 final class EulerMethod extends AbstractMethod {
   /**

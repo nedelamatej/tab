@@ -13,7 +13,7 @@
 
 /**
  * @file
- * @brief RungeKutta2Method class
+ * @brief Runge-Kutta 2nd order numerical method class
  *
  * @author Matej Nedela
  */
@@ -23,7 +23,7 @@ namespace App\Service\NumericalMethod;
 use App\Service\NumericalMethod\AbstractMethod;
 
 /**
- * RungeKutta2Method class
+ * @brief Runge-Kutta 2nd order numerical method class
  */
 final class RungeKutta2Method extends AbstractMethod {
   /**
