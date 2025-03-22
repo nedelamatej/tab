@@ -29,7 +29,7 @@ final class ChebyshevDistance extends AbstractDistance {
   /**
    * @brief Calculates the Chebyshev distance metric between the two points
    *
-   * @note The points must have the same dimension
+   * @note The points should have the same dimension
    *
    * @param array $pointA point A
    * @param array $pointB point B

@@ -27,7 +27,7 @@ abstract class AbstractDistance {
   /**
    * @brief Calculates the distance metric between the two points
    *
-   * @note The points must have the same dimension
+   * @note The points should have the same dimension
    *
    * @param array $pointA point A
    * @param array $pointB point B
