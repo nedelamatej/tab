@@ -35,6 +35,10 @@ class Event {
   #[ORM\Column]
   private ?int $id = null; ///< event id
 
+  #[ORM\ManyToOne(inversedBy: 'events')]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?Organization $organization = null; ///< event organization (optional)
+
   #[ORM\Column(length: 63)]
   private ?string $name = null; ///< event name
 
@@ -57,6 +61,28 @@ class Event {
    */
   public function getId(): ?int {
     return $this->id;
+  }
+
+  /**
+   * @brief Gets the event organization
+   *
+   * @return Organization|null organization
+   */
+  public function getOrganization(): ?Organization {
+    return $this->organization;
+  }
+
+  /**
+   * @brief Sets the event organization
+   *
+   * @param Organization|null $organization event organization
+   *
+   * @return static self reference
+   */
+  public function setOrganization(?Organization $organization): static {
+    $this->organization = $organization;
+
+    return $this;
   }
 
   /**

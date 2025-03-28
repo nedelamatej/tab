@@ -53,6 +53,12 @@ class Organization {
   private ?string $details = null; ///< organization details (optional)
 
   /**
+   * @var Collection<int, Event>
+   */
+  #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organization')]
+  private Collection $events; ///< events with this organization
+
+  /**
    * @var Collection<int, Pitcher>
    */
   #[ORM\OneToMany(targetEntity: Pitcher::class, mappedBy: 'organization')]
@@ -62,6 +68,7 @@ class Organization {
    * @brief Constructs new Organization object
    */
   public function __construct() {
+    $this->events = new ArrayCollection();
     $this->pitchers = new ArrayCollection();
   }
 
@@ -180,6 +187,48 @@ class Organization {
    */
   public function setDetails(?string $details): static {
     $this->details = $details;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the events with this organization
+   *
+   * @return Collection<int, Event> events
+   */
+  public function getEvents(): Collection {
+    return $this->events;
+  }
+
+  /**
+   * @brief Adds an event to this organization
+   *
+   * @param Event $event event to add
+   *
+   * @return static self reference
+   */
+  public function addEvent(Event $event): static {
+    if (!$this->events->contains($event)) {
+      $this->events->add($event);
+      $event->setOrganization($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * @brief Removes an event from this organization
+   *
+   * @param Event $event event to remove
+   *
+   * @return static self reference
+   */
+  public function removeEvent(Event $event): static {
+    if ($this->events->removeElement($event)) {
+      if ($event->getOrganization() === $this) {
+        $event->setOrganization(null);
+      }
+    }
 
     return $this;
   }
