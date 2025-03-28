@@ -20,6 +20,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -53,6 +55,19 @@ class Event {
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $details = null; ///< event details (optional)
+
+  /**
+   * @var Collection<int, Pitch>
+   */
+  #[ORM\OneToMany(targetEntity: Pitch::class, mappedBy: 'event')]
+  private Collection $pitches; ///< pitches with this event
+
+  /**
+   * @brief Constructs new Event object
+   */
+  public function __construct() {
+    $this->pitches = new ArrayCollection();
+  }
 
   /**
    * @brief Gets the event id
@@ -191,6 +206,48 @@ class Event {
    */
   public function setDetails(?string $details): static {
     $this->details = $details;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitches with this event
+   *
+   * @return Collection<int, Pitch> pitches
+   */
+  public function getPitches(): Collection {
+    return $this->pitches;
+  }
+
+  /**
+   * @brief Adds a pitch to this event
+   *
+   * @param Pitch $pitch pitch to add
+   *
+   * @return static self reference
+   */
+  public function addPitch(Pitch $pitch): static {
+    if (!$this->pitches->contains($pitch)) {
+      $this->pitches->add($pitch);
+      $pitch->setEvent($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * @brief Removes a pitch from this event
+   *
+   * @param Pitch $pitch pitch to remove
+   *
+   * @return static self reference
+   */
+  public function removePitch(Pitch $pitch): static {
+    if ($this->pitches->removeElement($pitch)) {
+      if ($pitch->getEvent() === $this) {
+        $pitch->setEvent(null);
+      }
+    }
 
     return $this;
   }
