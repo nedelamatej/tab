@@ -20,6 +20,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -49,6 +51,19 @@ class Organization {
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $details = null; ///< organization details (optional)
+
+  /**
+   * @var Collection<int, Pitcher>
+   */
+  #[ORM\OneToMany(targetEntity: Pitcher::class, mappedBy: 'organization')]
+  private Collection $pitchers; ///< pitchers with this organization
+
+  /**
+   * @brief Constructs new Organization object
+   */
+  public function __construct() {
+    $this->pitchers = new ArrayCollection();
+  }
 
   /**
    * @brief Gets the organization id
@@ -165,6 +180,48 @@ class Organization {
    */
   public function setDetails(?string $details): static {
     $this->details = $details;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitchers with this organization
+   *
+   * @return Collection<int, Pitcher> pitchers
+   */
+  public function getPitchers(): Collection {
+    return $this->pitchers;
+  }
+
+  /**
+   * @brief Adds a pitcher to this organization
+   *
+   * @param Pitcher $pitcher pitcher to add
+   *
+   * @return static self reference
+   */
+  public function addPitcher(Pitcher $pitcher): static {
+    if (!$this->pitchers->contains($pitcher)) {
+      $this->pitchers->add($pitcher);
+      $pitcher->setOrganization($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * @brief Removes a pitcher from this organization
+   *
+   * @param Pitcher $pitcher pitcher to remove
+   *
+   * @return static self reference
+   */
+  public function removePitcher(Pitcher $pitcher): static {
+    if ($this->pitchers->removeElement($pitcher)) {
+      if ($pitcher->getOrganization() === $this) {
+        $pitcher->setOrganization(null);
+      }
+    }
 
     return $this;
   }

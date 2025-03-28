@@ -35,6 +35,10 @@ class Pitcher {
   #[ORM\Column]
   private ?int $id = null; ///< pitcher id
 
+  #[ORM\ManyToOne(inversedBy: 'pitchers')]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?Organization $organization = null; ///< pitcher organization (optional)
+
   #[ORM\Column(length: 31)]
   private ?string $firstName = null; ///< pitcher first name
 
@@ -60,6 +64,28 @@ class Pitcher {
    */
   public function getId(): ?int {
     return $this->id;
+  }
+
+  /**
+   * @brief Gets the pitcher organization
+   *
+   * @return Organization|null organization
+   */
+  public function getOrganization(): ?Organization {
+    return $this->organization;
+  }
+
+  /**
+   * @brief Sets the pitcher organization
+   *
+   * @param Organization|null $organization organization
+   *
+   * @return static self reference
+   */
+  public function setOrganization(?Organization $organization): static {
+    $this->organization = $organization;
+
+    return $this;
   }
 
   /**
