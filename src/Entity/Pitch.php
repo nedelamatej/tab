@@ -42,6 +42,9 @@ class Pitch {
   private ?\DateTimeInterface $time = null; ///< pitch time
 
   #[ORM\ManyToOne(inversedBy: 'pitches')]
+  private ?Pitcher $pitcher = null; ///< pitch pitccher
+
+  #[ORM\ManyToOne(inversedBy: 'pitches')]
   private ?Type $type = null; ///< pitch type
 
   #[ORM\Column]
@@ -156,6 +159,29 @@ class Pitch {
    */
   public function setTime(\DateTimeInterface $time): static {
     $this->time = $time;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch pitcher
+   *
+   * @return Pitcher|null pitcher
+   */
+  public function getPitcher(): ?Pitcher {
+    return $this->pitcher;
+  }
+
+
+  /**
+   * @brief Sets the pitch pitcher
+   *
+   * @param Pitcher|null $pitcher pitcher
+   *
+   * @return static self reference
+   */
+  public function setPitcher(?Pitcher $pitcher): static {
+    $this->pitcher = $pitcher;
 
     return $this;
   }

@@ -20,6 +20,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -56,6 +58,19 @@ class Pitcher {
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $details = null; ///< pitcher details (optional)
+
+  /**
+   * @var Collection<int, Pitch>
+   */
+  #[ORM\OneToMany(targetEntity: Pitch::class, mappedBy: 'pitcher')]
+  private Collection $pitches; ///< pitches with this pitcher
+
+  /**
+   * @brief Constructs new Pitcher object
+   */
+  public function __construct() {
+    $this->pitches = new ArrayCollection();
+  }
 
   /**
    * @brief Gets the pitcher id
@@ -216,6 +231,48 @@ class Pitcher {
    */
   public function setDetails(?string $details): static {
     $this->details = $details;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitches with this pitcher
+   *
+   * @return Collection<int, Pitch> pitches
+   */
+  public function getPitches(): Collection {
+    return $this->pitches;
+  }
+
+  /**
+   * @brief Adds a pitch to this pitcher
+   *
+   * @param Pitch $pitch pitch to add
+   *
+   * @return static self reference
+   */
+  public function addPitch(Pitch $pitch): static {
+    if (!$this->pitches->contains($pitch)) {
+      $this->pitches->add($pitch);
+      $pitch->setPitcher($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * @brief Removes a pitch from this pitcher
+   *
+   * @param Pitch $pitch pitch to remove
+   *
+   * @return static self reference
+   */
+  public function removePitch(Pitch $pitch): static {
+    if ($this->pitches->removeElement($pitch)) {
+      if ($pitch->getPitcher() === $this) {
+        $pitch->setPitcher(null);
+      }
+    }
 
     return $this;
   }
