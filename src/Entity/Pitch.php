@@ -41,6 +41,9 @@ class Pitch {
   #[ORM\Column(type: Types::TIME_MUTABLE)]
   private ?\DateTimeInterface $time = null; ///< pitch time
 
+  #[ORM\ManyToOne(inversedBy: 'pitches')]
+  private ?Type $type = null; ///< pitch type
+
   #[ORM\Column]
   private ?float $t = null; ///< pitch flight duration [s]
 
@@ -153,6 +156,28 @@ class Pitch {
    */
   public function setTime(\DateTimeInterface $time): static {
     $this->time = $time;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch type
+   *
+   * @return Type|null pitch type
+   */
+  public function getType(): ?Type {
+    return $this->type;
+  }
+
+  /**
+   * @brief Sets the pitch type
+   *
+   * @param Type|null $type pitch type
+   *
+   * @return static self reference
+   */
+  public function setType(?Type $type): static {
+    $this->type = $type;
 
     return $this;
   }
@@ -499,7 +524,7 @@ class Pitch {
   /**
    * @brief Sets the pitch 1st control point x coordinate
    *
-   * @param float $x_1 1st control point x coordinate [m]
+   * @param float|null $x_1 1st control point x coordinate [m]
    *
    * @return static self reference
    */
@@ -521,7 +546,7 @@ class Pitch {
   /**
    * @brief Sets the pitch 1st control point y coordinate
    *
-   * @param float $y_1 1st control point y coordinate [m]
+   * @param float|null $y_1 1st control point y coordinate [m]
    *
    * @return static self reference
    */
@@ -558,7 +583,7 @@ class Pitch {
   /**
    * @brief Sets the pitch 2nd control point x coordinate
    *
-   * @param float $x_2 2nd control point x coordinate [m]
+   * @param float|null $x_2 2nd control point x coordinate [m]
    *
    * @return static self reference
    */
@@ -580,7 +605,7 @@ class Pitch {
   /**
    * @brief Sets the pitch 2nd control point y coordinate
    *
-   * @param float $y_2 2nd control point y coordinate [m]
+   * @param float|null $y_2 2nd control point y coordinate [m]
    *
    * @return static self reference
    */
@@ -602,7 +627,7 @@ class Pitch {
   /**
    * @brief Sets the pitch 2nd control point z coordinate
    *
-   * @param float $z_2 2nd control point z coordinate [m]
+   * @param float|null $z_2 2nd control point z coordinate [m]
    *
    * @return static self reference
    */
