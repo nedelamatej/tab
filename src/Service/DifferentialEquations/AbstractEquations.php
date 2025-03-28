@@ -26,7 +26,7 @@ namespace App\Service\DifferentialEquations;
 abstract class AbstractEquations {
   protected float $c_d;   ///< drag coefficient
   protected float $c_l;   ///< lift coefficient
-  protected float $alpha; ///< ball rotation direction angle [rad]
+  protected float $alpha; ///< pitch rotation angle [rad]
   protected float $m;     ///< ball mass [kg]
   protected float $a;     ///< ball cross sectional area [m^2]
   protected float $g;     ///< gravitational acceleration [m/s^2]
@@ -37,7 +37,7 @@ abstract class AbstractEquations {
    *
    * @param float $c_d drag coefficient
    * @param float $c_l lift coefficient
-   * @param float $alpha ball rotation direction angle [rad]
+   * @param float $alpha pitch rotation angle [rad]
    * @param float $m ball mass [kg]
    * @param float $c ball circumference [m]
    * @param float $g gravitational acceleration [m/s^2]

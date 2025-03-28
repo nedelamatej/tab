@@ -31,7 +31,7 @@ final class BaseballEquations extends AbstractEquations {
    *
    * @param float $c_d drag coefficient
    * @param float $c_l lift coefficient
-   * @param float $alpha ball rotation direction angle [rad]
+   * @param float $alpha pitch rotation angle [rad]
    */
   public function __construct(float $c_d, float $c_l, float $alpha) {
     parent::__construct($c_d, $c_l, $alpha, 0.145, 0.232);
