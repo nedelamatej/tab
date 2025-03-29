@@ -86,14 +86,14 @@ class Pitch {
   #[ORM\Column]
   private ?float $z_t = null; ///< pitch final z coordinate [m]
 
-  #[ORM\Column]
-  private ?float $v_t = null; ///< pitch final translational velocity [m/s]
+  #[ORM\Column(nullable: true)]
+  private ?float $v_t = null; ///< pitch final translational velocity [m/s] (optional)
 
-  #[ORM\Column]
-  private ?float $phi_t = null; ///< pitch final horizontal angle [rad]
+  #[ORM\Column(nullable: true)]
+  private ?float $phi_t = null; ///< pitch final horizontal angle [rad] (optional)
 
-  #[ORM\Column]
-  private ?float $theta_t = null; ///< pitch final vertical angle [rad]
+  #[ORM\Column(nullable: true)]
+  private ?float $theta_t = null; ///< pitch final vertical angle [rad] (optional)
 
   #[ORM\Column(nullable: true)]
   private ?float $x_1 = null; ///< pitch 1st control point x coordinate [m] (optional)
@@ -570,11 +570,11 @@ class Pitch {
   /**
    * @brief Sets the pitch final translational velocity
    *
-   * @param float $v_t final translational velocity [m/s]
+   * @param float|null $v_t final translational velocity [m/s]
    *
    * @return static self reference
    */
-  public function setV_t(float $v_t): static {
+  public function setV_t(?float $v_t): static {
     $this->v_t = $v_t;
 
     return $this;
@@ -605,11 +605,11 @@ class Pitch {
   /**
    * @brief Sets the pitch final horizontal angle
    *
-   * @param float $phi_t final horizontal angle [rad]
+   * @param float|null $phi_t final horizontal angle [rad]
    *
    * @return static self reference
    */
-  public function setPhi_t(float $phi_t): static {
+  public function setPhi_t(?float $phi_t): static {
     $this->phi_t = $phi_t;
 
     return $this;
@@ -627,11 +627,11 @@ class Pitch {
   /**
    * @brief Sets the pitch final vertical angle
    *
-   * @param float $theta_t final vertical angle [rad]
+   * @param float|null $theta_t final vertical angle [rad]
    *
    * @return static self reference
    */
-  public function setTheta_t(float $theta_t): static {
+  public function setTheta_t(?float $theta_t): static {
     $this->theta_t = $theta_t;
 
     return $this;
