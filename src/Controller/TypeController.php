@@ -89,7 +89,7 @@ final class TypeController extends AbstractController {
 
     $type = new Type();
 
-    if (isset($data->name)) $type->setName($data->name);
+    if (property_exists($data, 'name')) $type->setName($data->name);
 
     $errors = $this->validator->validate($type);
     if (count($errors) > 0) return new Response($errors, 400);
@@ -115,7 +115,7 @@ final class TypeController extends AbstractController {
     $type = $this->entityManager->getRepository(Type::class)->find($id);
     if (!$type) return new Response(null, 404);
 
-    if (isset($data->name)) $type->setName($data->name);
+    if (property_exists($data, 'name')) $type->setName($data->name);
 
     $errors = $this->validator->validate($type);
     if (count($errors) > 0) return new Response($errors, 400);

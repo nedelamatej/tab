@@ -92,13 +92,13 @@ final class PitcherController extends AbstractController {
 
     $pitcher = new Pitcher();
 
-    if (isset($data->organization)) $pitcher->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
-    if (isset($data->firstName)) $pitcher->setFirstName($data->firstName);
-    if (isset($data->lastName)) $pitcher->setLastName($data->lastName);
-    if (isset($data->date)) $pitcher->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
-    if (isset($data->city)) $pitcher->setCity($data->city);
-    if (isset($data->country)) $pitcher->setCountry($data->country);
-    if (isset($data->details)) $pitcher->setDetails($data->details);
+    if (property_exists($data, 'organization')) $pitcher->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
+    if (property_exists($data, 'firstName')) $pitcher->setFirstName($data->firstName);
+    if (property_exists($data, 'lastName')) $pitcher->setLastName($data->lastName);
+    if (property_exists($data, 'date')) $pitcher->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
+    if (property_exists($data, 'city')) $pitcher->setCity($data->city);
+    if (property_exists($data, 'country')) $pitcher->setCountry($data->country);
+    if (property_exists($data, 'details')) $pitcher->setDetails($data->details);
 
     $errors = $this->validator->validate($pitcher);
     if (count($errors) > 0) return new Response($errors, 400);
@@ -124,13 +124,13 @@ final class PitcherController extends AbstractController {
     $pitcher = $this->entityManager->getRepository(Pitcher::class)->find($id);
     if (!$pitcher) return new Response(null, 404);
 
-    if (isset($data->organization)) $pitcher->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
-    if (isset($data->firstName)) $pitcher->setFirstName($data->firstName);
-    if (isset($data->lastName)) $pitcher->setLastName($data->lastName);
-    if (isset($data->date)) $pitcher->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
-    if (isset($data->city)) $pitcher->setCity($data->city);
-    if (isset($data->country)) $pitcher->setCountry($data->country);
-    if (isset($data->details)) $pitcher->setDetails($data->details);
+    if (property_exists($data, 'organization')) $pitcher->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
+    if (property_exists($data, 'firstName')) $pitcher->setFirstName($data->firstName);
+    if (property_exists($data, 'lastName')) $pitcher->setLastName($data->lastName);
+    if (property_exists($data, 'date')) $pitcher->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
+    if (property_exists($data, 'city')) $pitcher->setCity($data->city);
+    if (property_exists($data, 'country')) $pitcher->setCountry($data->country);
+    if (property_exists($data, 'details')) $pitcher->setDetails($data->details);
 
     $errors = $this->validator->validate($pitcher);
     if (count($errors) > 0) return new Response($errors, 400);

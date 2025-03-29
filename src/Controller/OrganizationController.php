@@ -91,11 +91,11 @@ final class OrganizationController extends AbstractController {
 
     $organization = new Organization();
 
-    if (isset($data->name)) $organization->setName($data->name);
-    if (isset($data->date)) $organization->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
-    if (isset($data->city)) $organization->setCity($data->city);
-    if (isset($data->country)) $organization->setCountry($data->country);
-    if (isset($data->details)) $organization->setDetails($data->details);
+    if (property_exists($data, 'name')) $organization->setName($data->name);
+    if (property_exists($data, 'date')) $organization->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
+    if (property_exists($data, 'city')) $organization->setCity($data->city);
+    if (property_exists($data, 'country')) $organization->setCountry($data->country);
+    if (property_exists($data, 'details')) $organization->setDetails($data->details);
 
     $errors = $this->validator->validate($organization);
     if (count($errors) > 0) return new Response($errors, 400);
@@ -121,11 +121,11 @@ final class OrganizationController extends AbstractController {
     $organization = $this->entityManager->getRepository(Organization::class)->find($id);
     if (!$organization) return new Response(null, 404);
 
-    if (isset($data->name)) $organization->setName($data->name);
-    if (isset($data->date)) $organization->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
-    if (isset($data->city)) $organization->setCity($data->city);
-    if (isset($data->country)) $organization->setCountry($data->country);
-    if (isset($data->details)) $organization->setDetails($data->details);
+    if (property_exists($data, 'name')) $organization->setName($data->name);
+    if (property_exists($data, 'date')) $organization->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
+    if (property_exists($data, 'city')) $organization->setCity($data->city);
+    if (property_exists($data, 'country')) $organization->setCountry($data->country);
+    if (property_exists($data, 'details')) $organization->setDetails($data->details);
 
     $errors = $this->validator->validate($organization);
     if (count($errors) > 0) return new Response($errors, 400);

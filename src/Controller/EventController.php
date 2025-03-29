@@ -92,12 +92,12 @@ final class EventController extends AbstractController {
 
     $event = new Event();
 
-    if (isset($data->organization)) $event->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
-    if (isset($data->name)) $event->setName($data->name);
-    if (isset($data->date)) $event->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
-    if (isset($data->city)) $event->setCity($data->city);
-    if (isset($data->country)) $event->setCountry($data->country);
-    if (isset($data->details)) $event->setDetails($data->details);
+    if (property_exists($data, 'organization')) $event->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
+    if (property_exists($data, 'name')) $event->setName($data->name);
+    if (property_exists($data, 'date')) $event->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
+    if (property_exists($data, 'city')) $event->setCity($data->city);
+    if (property_exists($data, 'country')) $event->setCountry($data->country);
+    if (property_exists($data, 'details')) $event->setDetails($data->details);
 
     $errors = $this->validator->validate($event);
     if (count($errors) > 0) return new Response($errors, 400);
@@ -123,12 +123,12 @@ final class EventController extends AbstractController {
     $event = $this->entityManager->getRepository(Event::class)->find($id);
     if (!$event) return new Response(null, 404);
 
-    if (isset($data->organization)) $event->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
-    if (isset($data->name)) $event->setName($data->name);
-    if (isset($data->date)) $event->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
-    if (isset($data->city)) $event->setCity($data->city);
-    if (isset($data->country)) $event->setCountry($data->country);
-    if (isset($data->details)) $event->setDetails($data->details);
+    if (property_exists($data, 'organization')) $event->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
+    if (property_exists($data, 'name')) $event->setName($data->name);
+    if (property_exists($data, 'date')) $event->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
+    if (property_exists($data, 'city')) $event->setCity($data->city);
+    if (property_exists($data, 'country')) $event->setCountry($data->country);
+    if (property_exists($data, 'details')) $event->setDetails($data->details);
 
     $errors = $this->validator->validate($event);
     if (count($errors) > 0) return new Response($errors, 400);
