@@ -412,6 +412,19 @@ class Pitch {
   }
 
   /**
+   * @brief Gets the pitch initial translational velocity in xyz coordinates
+   *
+   * @return array initial translational velocity in xyz coordinates [m/s]
+   */
+  public function getV_xyz_0(): array {
+    return [
+      $this->v_0 * sin($this->phi_0) * cos($this->theta_0),
+      $this->v_0 * sin($this->phi_0) * sin($this->theta_0),
+      $this->v_0 * cos($this->phi_0),
+    ];
+  }
+
+  /**
    * @brief Gets the pitch initial horizontal angle
    *
    * @return float|null initial horizontal angle [rad]
@@ -565,6 +578,19 @@ class Pitch {
     $this->v_t = $v_t;
 
     return $this;
+  }
+
+  /**
+   * @brief Gets the pitch final translational velocity in xyz coordinates
+   *
+   * @return array final translational velocity in xyz coordinates [m/s]
+   */
+  public function getV_xyz_t(): array {
+    return [
+      $this->v_t * sin($this->phi_t) * cos($this->theta_t),
+      $this->v_t * sin($this->phi_t) * sin($this->theta_t),
+      $this->v_t * cos($this->phi_t),
+    ];
   }
 
   /**
