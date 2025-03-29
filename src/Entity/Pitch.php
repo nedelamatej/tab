@@ -366,6 +366,30 @@ class Pitch {
   }
 
   /**
+   * @brief Gets the pitch initial coordinates
+   *
+   * @return array initial coordinates [m]
+   */
+  public function getXyz_0(): array {
+    return [$this->x_0, $this->y_0, $this->z_0];
+  }
+
+  /**
+   * @brief Sets the pitch initial coordinates
+   *
+   * @param array $xyz_0 initial coordinates [m]
+   *
+   * @return static self reference
+   */
+  public function setXyz_0(array $xyz_0): static {
+    $this->x_0 = $xyz_0[0];
+    $this->y_0 = $xyz_0[1];
+    $this->z_0 = $xyz_0[2];
+
+    return $this;
+  }
+
+  /**
    * @brief Gets the pitch initial translational velocity
    *
    * @return float|null initial translational velocity [m/s]
@@ -498,6 +522,30 @@ class Pitch {
   }
 
   /**
+   * @brief Gets the pitch final coordinates
+   *
+   * @return array final coordinates [m]
+   */
+  public function getXyz_t(): array {
+    return [$this->x_t, $this->y_t, $this->z_t];
+  }
+
+  /**
+   * @brief Sets the pitch final coordinates
+   *
+   * @param array $xyz_t final coordinates [m]
+   *
+   * @return static self reference
+   */
+  public function setXyz_t(array $xyz_t): static {
+    $this->x_t = $xyz_t[0];
+    $this->y_t = $xyz_t[1];
+    $this->z_t = $xyz_t[2];
+
+    return $this;
+  }
+
+  /**
    * @brief Gets the pitch final translational velocity
    *
    * @return float|null final translational velocity [m/s]
@@ -616,8 +664,39 @@ class Pitch {
     return $this->z_1;
   }
 
+  /**
+   * @brief Sets the pitch 1st control point z coordinate
+   *
+   * @param float|null $z_1 1st control point z coordinate [m]
+   *
+   * @return static self reference
+   */
   public function setZ_1(?float $z_1): static {
     $this->z_1 = $z_1;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch 1st control point coordinates
+   *
+   * @return array 1st control point coordinates [m]
+   */
+  public function getXyz_1(): array {
+    return [$this->x_1, $this->y_1, $this->z_1];
+  }
+
+  /**
+   * @brief Sets the pitch 1st control point coordinates
+   *
+   * @param array $xyz_1 1st control point coordinates [m]
+   *
+   * @return static self reference
+   */
+  public function setXyz_1(array $xyz_1): static {
+    $this->x_1 = $xyz_1[0];
+    $this->y_1 = $xyz_1[1];
+    $this->z_1 = $xyz_1[2];
 
     return $this;
   }
@@ -684,6 +763,30 @@ class Pitch {
    */
   public function setZ_2(?float $z_2): static {
     $this->z_2 = $z_2;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch 2nd control point coordinates
+   *
+   * @return array 2nd control point coordinates [m]
+   */
+  public function getXyz_2(): array {
+    return [$this->x_2, $this->y_2, $this->z_2];
+  }
+
+  /**
+   * @brief Sets the pitch 2nd control point coordinates
+   *
+   * @param array $xyz_2 2nd control point coordinates [m]
+   *
+   * @return static self reference
+   */
+  public function setXyz_2(array $xyz_2): static {
+    $this->x_2 = $xyz_2[0];
+    $this->y_2 = $xyz_2[1];
+    $this->z_2 = $xyz_2[2];
 
     return $this;
   }
