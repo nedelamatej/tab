@@ -114,13 +114,22 @@ class Pitch {
   private ?float $z_2 = null; ///< pitch 2nd control point z coordinate [m] (optional)
 
   #[ORM\Column(nullable: true)]
+  private ?float $x_3 = null; ///< pitch 3rd control point x coordinate [m] (optional)
+
+  #[ORM\Column(nullable: true)]
+  private ?float $y_3 = null; ///< pitch 3rd control point y coordinate [m] (optional)
+
+  #[ORM\Column(nullable: true)]
+  private ?float $z_3 = null; ///< pitch 3rd control point z coordinate [m] (optional)
+
+  #[ORM\Column(nullable: true)]
   private ?float $c_d = null; ///< pitch drag coefficient (optional)
 
   #[ORM\Column(nullable: true)]
   private ?float $c_l = null; ///< pitch lift coefficient (optional)
 
   #[ORM\Column(nullable: true)]
-  private ?float $delta = null; ///< pitch computational deviation (optional)
+  private ?float $delta = null; ///< pitch computational deviation [m] (optional)
 
   /**
    * @brief Gets the pitch id
@@ -822,6 +831,96 @@ class Pitch {
     $this->x_2 = $xyz_2[0];
     $this->y_2 = $xyz_2[1];
     $this->z_2 = $xyz_2[2];
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch 3rd control point x coordinate
+   *
+   * @return float|null 3rd control point x coordinate [m]
+   */
+  public function getX_3(): ?float {
+    return $this->x_3;
+  }
+
+  /**
+   * @brief Sets the pitch 3rd control point x coordinate
+   *
+   * @param float|null $x_3 3rd control point x coordinate [m]
+   *
+   * @return static self reference
+   */
+  public function setX_3(?float $x_3): static {
+    $this->x_3 = $x_3;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch 3rd control point y coordinate
+   *
+   * @return float|null 3rd control point y coordinate [m]
+   */
+  public function getY_3(): ?float {
+    return $this->y_3;
+  }
+
+  /**
+   * @brief Sets the pitch 3rd control point y coordinate
+   *
+   * @param float|null $y_3 3rd control point y coordinate [m]
+   *
+   * @return static self reference
+   */
+  public function setY_3(?float $y_3): static {
+    $this->y_3 = $y_3;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch 3rd control point z coordinate
+   *
+   * @return float|null 3rd control point z coordinate [m]
+   */
+  public function getZ_3(): ?float {
+    return $this->z_3;
+  }
+
+  /**
+   * @brief Sets the pitch 3rd control point z coordinate
+   *
+   * @param float|null $z_3 3rd control point z coordinate [m]
+   *
+   * @return static self reference
+   */
+  public function setZ_3(?float $z_3): static {
+    $this->z_3 = $z_3;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch 3rd control point coordinates
+   *
+   * @return array 3rd control point coordinates [m]
+   */
+  public function getXyz_3(): array {
+    return [$this->x_3, $this->y_3, $this->z_3];
+  }
+
+  /**
+   * @brief Sets the pitch 3rd control point coordinates
+   *
+   * @param array $xyz_3 3rd control point coordinates [m]
+   *
+   * @return static self reference
+   */
+  public function setXyz_3(array $xyz_3): static {
+    $this->x_3 = $xyz_3[0];
+    $this->y_3 = $xyz_3[1];
+    $this->z_3 = $xyz_3[2];
 
     return $this;
   }

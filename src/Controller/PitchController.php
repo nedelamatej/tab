@@ -162,6 +162,7 @@ final class PitchController extends AbstractController {
 
     $pitch->setXyz_1([$x->get(1), $y->get(1), $z->get(1)]);
     $pitch->setXyz_2([$x->get(2), $y->get(2), $z->get(2)]);
+    $pitch->setXyz_3([$x->get(3), $y->get(3), $z->get(3)]);
 
     $errors = $this->validator->validate($pitch);
     if (count($errors) > 0) return new Response($errors, 400);
@@ -246,6 +247,7 @@ final class PitchController extends AbstractController {
 
     $pitch->setXyz_1([$x->get(1), $y->get(1), $z->get(1)]);
     $pitch->setXyz_2([$x->get(2), $y->get(2), $z->get(2)]);
+    $pitch->setXyz_3([$x->get(3), $y->get(3), $z->get(3)]);
 
     $errors = $this->validator->validate($pitch);
     if (count($errors) > 0) return new Response($errors, 400);
