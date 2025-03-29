@@ -113,6 +113,15 @@ class Pitch {
   #[ORM\Column(nullable: true)]
   private ?float $z_2 = null; ///< pitch 2nd control point z coordinate [m] (optional)
 
+  #[ORM\Column(nullable: true)]
+  private ?float $c_d = null; ///< pitch drag coefficient (optional)
+
+  #[ORM\Column(nullable: true)]
+  private ?float $c_l = null; ///< pitch lift coefficient (optional)
+
+  #[ORM\Column(nullable: true)]
+  private ?float $delta = null; ///< pitch computational deviation (optional)
+
   /**
    * @brief Gets the pitch id
    *
@@ -813,6 +822,72 @@ class Pitch {
     $this->x_2 = $xyz_2[0];
     $this->y_2 = $xyz_2[1];
     $this->z_2 = $xyz_2[2];
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch drag coefficient
+   *
+   * @return float|null drag coefficient
+   */
+  public function getC_d(): ?float {
+    return $this->c_d;
+  }
+
+  /**
+   * @brief Sets the pitch drag coefficient
+   *
+   * @param float|null $c_d drag coefficient
+   *
+   * @return static self reference
+   */
+  public function setC_d(?float $c_d): static {
+    $this->c_d = $c_d;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch lift coefficient
+   *
+   * @return float|null lift coefficient
+   */
+  public function getC_l(): ?float {
+    return $this->c_l;
+  }
+
+  /**
+   * @brief Sets the pitch lift coefficient
+   *
+   * @param float|null $c_l lift coefficient
+   *
+   * @return static self reference
+   */
+  public function setC_l(?float $c_l): static {
+    $this->c_l = $c_l;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitch computational deviation
+   *
+   * @return float|null computational deviation
+   */
+  public function getDelta(): ?float {
+    return $this->delta;
+  }
+
+  /**
+   * @brief Sets the pitch computational deviation
+   *
+   * @param float|null $delta computational deviation
+   *
+   * @return static self reference
+   */
+  public function setDelta(?float $delta): static {
+    $this->delta = $delta;
 
     return $this;
   }
