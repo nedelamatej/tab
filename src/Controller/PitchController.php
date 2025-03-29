@@ -137,15 +137,19 @@ final class PitchController extends AbstractController {
       return EuclideanDistance::calc($pitch->getXyz_t(), end($solution));
     });
 
-    $softballEquations = new SoftballEquations($c_l, $c_d, $pitch->getAlpha());
+    $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
 
     $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
+
+    $pitch->setC_d($c_d);
+    $pitch->setC_l($c_l);
+    $pitch->setDelta(EuclideanDistance::calc($pitch->getXyz_t(), end($solution)));
 
     $matrix = [];
 
     for ($i = 0; $i < count($solution); ++$i) {
       for ($j = 0; $j < 4; ++$j) {
-        $matrix[$i][$j] = BernsteinPolynomial::calc($j, 4, 1 / (count($solution) - 1) * $i);
+        $matrix[$i][$j] = BernsteinPolynomial::calc($j, 3, 1 / (count($solution) - 1) * $i);
       }
     }
 
@@ -217,15 +221,19 @@ final class PitchController extends AbstractController {
       return EuclideanDistance::calc($pitch->getXyz_t(), end($solution));
     });
 
-    $softballEquations = new SoftballEquations($c_l, $c_d, $pitch->getAlpha());
+    $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
 
     $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
+
+    $pitch->setC_d($c_d);
+    $pitch->setC_l($c_l);
+    $pitch->setDelta(EuclideanDistance::calc($pitch->getXyz_t(), end($solution)));
 
     $matrix = [];
 
     for ($i = 0; $i < count($solution); ++$i) {
       for ($j = 0; $j < 4; ++$j) {
-        $matrix[$i][$j] = BernsteinPolynomial::calc($j, 4, 1 / (count($solution) - 1) * $i);
+        $matrix[$i][$j] = BernsteinPolynomial::calc($j, 3, 1 / (count($solution) - 1) * $i);
       }
     }
 
