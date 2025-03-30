@@ -60,7 +60,16 @@ final class OrganizationController extends AbstractController {
   public function organizationGet(): JsonResponse {
     $organizations = $this->entityManager->getRepository(Organization::class)->findAll();
 
-    return new JsonResponse($organizations);
+    return new JsonResponse(array_map(function ($organization) {
+      return [
+        'id' => $organization->getId(),
+        'name' => $organization->getName(),
+        'date' => $organization->getDate()?->format('d.m.Y'),
+        'city' => $organization->getCity(),
+        'country' => $organization->getCountry(),
+        'details' => $organization->getDetails(),
+      ];
+    }, $organizations));
   }
 
   /**
@@ -75,7 +84,14 @@ final class OrganizationController extends AbstractController {
     $organization = $this->entityManager->getRepository(Organization::class)->find($id);
     if (!$organization) return new Response(null, 404);
 
-    return new JsonResponse($organization);
+    return new JsonResponse([
+      'id' => $organization->getId(),
+      'name' => $organization->getName(),
+      'date' => $organization->getDate()?->format('d.m.Y'),
+      'city' => $organization->getCity(),
+      'country' => $organization->getCountry(),
+      'details' => $organization->getDetails(),
+    ]);
   }
 
   /**
