@@ -72,7 +72,33 @@ final class PitchController extends AbstractController {
   public function pitchGet(): JsonResponse {
     $pitches = $this->entityManager->getRepository(Pitch::class)->findAll();
 
-    return new JsonResponse($pitches);
+    return new JsonResponse(array_map(function ($pitch) {
+      return [
+        'id' => $pitch->getId(),
+        'date' => $pitch->getDate()?->format('d.m.Y'),
+        'time' => $pitch->getTime()?->format('H:i'),
+        'event' => $pitch->getEvent()?->getId(),
+        'pitcher' => $pitch->getPitcher()?->getId(),
+        'type' => $pitch->getType()?->getId(),
+        't' => $pitch->getT(),
+        'alpha' => $pitch->getAlpha(),
+        'omega' => $pitch->getOmega(),
+        'xyz_0' => $pitch->getXyz_0(),
+        'v_0' => $pitch->getV_0(),
+        'phi_0' => $pitch->getPhi_0(),
+        'theta_0' => $pitch->getTheta_0(),
+        'xyz_t' => $pitch->getXyz_t(),
+        'v_t' => $pitch->getV_t(),
+        'phi_t' => $pitch->getPhi_t(),
+        'theta_t' => $pitch->getTheta_t(),
+        'xyz_1' => $pitch->getXyz_1(),
+        'xyz_2' => $pitch->getXyz_2(),
+        'xyz_3' => $pitch->getXyz_3(),
+        'c_d' => $pitch->getC_d(),
+        'c_l' => $pitch->getC_l(),
+        'delta' => $pitch->getDelta(),
+      ];
+    }, $pitches));
   }
 
   /**
@@ -87,7 +113,31 @@ final class PitchController extends AbstractController {
     $pitch = $this->entityManager->getRepository(Pitch::class)->find($id);
     if (!$pitch) return new Response(null, 404);
 
-    return new JsonResponse($pitch);
+    return new JsonResponse([
+      'id' => $pitch->getId(),
+      'date' => $pitch->getDate()?->format('d.m.Y'),
+      'time' => $pitch->getTime()?->format('H:i'),
+      'event' => $pitch->getEvent()?->getId(),
+      'pitcher' => $pitch->getPitcher()?->getId(),
+      'type' => $pitch->getType()?->getId(),
+      't' => $pitch->getT(),
+      'alpha' => $pitch->getAlpha(),
+      'omega' => $pitch->getOmega(),
+      'xyz_0' => $pitch->getXyz_0(),
+      'v_0' => $pitch->getV_0(),
+      'phi_0' => $pitch->getPhi_0(),
+      'theta_0' => $pitch->getTheta_0(),
+      'xyz_t' => $pitch->getXyz_t(),
+      'v_t' => $pitch->getV_t(),
+      'phi_t' => $pitch->getPhi_t(),
+      'theta_t' => $pitch->getTheta_t(),
+      'xyz_1' => $pitch->getXyz_1(),
+      'xyz_2' => $pitch->getXyz_2(),
+      'xyz_3' => $pitch->getXyz_3(),
+      'c_d' => $pitch->getC_d(),
+      'c_l' => $pitch->getC_l(),
+      'delta' => $pitch->getDelta(),
+    ]);
   }
 
   /**
