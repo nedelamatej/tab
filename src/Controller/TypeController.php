@@ -58,7 +58,12 @@ final class TypeController extends AbstractController {
   public function typeGet(): JsonResponse {
     $types = $this->entityManager->getRepository(Type::class)->findAll();
 
-    return new JsonResponse($types);
+    return new JsonResponse(array_map(function ($type) {
+      return [
+        'id' => $type->getId(),
+        'name' => $type->getName(),
+      ];
+    }, $types));
   }
 
   /**
@@ -73,7 +78,10 @@ final class TypeController extends AbstractController {
     $type = $this->entityManager->getRepository(Type::class)->find($id);
     if (!$type) return new Response(null, 404);
 
-    return new JsonResponse($type);
+    return new JsonResponse([
+      'id' => $type->getId(),
+      'name' => $type->getName(),
+    ]);
   }
 
   /**
