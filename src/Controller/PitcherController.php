@@ -61,7 +61,18 @@ final class PitcherController extends AbstractController {
   public function pitcherGet(): JsonResponse {
     $pitchers = $this->entityManager->getRepository(Pitcher::class)->findAll();
 
-    return new JsonResponse($pitchers);
+    return new JsonResponse(array_map(function($pitcher) {
+      return [
+        'id' => $pitcher->getId(),
+        'organization' => $pitcher->getOrganization()?->getId(),
+        'firstName' => $pitcher->getFirstName(),
+        'lastName' => $pitcher->getLastName(),
+        'date' => $pitcher->getDate()?->format('d.m.Y'),
+        'city' => $pitcher->getCity(),
+        'country' => $pitcher->getCountry(),
+        'details' => $pitcher->getDetails(),
+      ];
+    }, $pitchers));
   }
 
   /**
@@ -76,7 +87,16 @@ final class PitcherController extends AbstractController {
     $pitcher = $this->entityManager->getRepository(Pitcher::class)->find($id);
     if (!$pitcher) return new Response(null, 404);
 
-    return new JsonResponse($pitcher);
+    return new JsonResponse([
+      'id' => $pitcher->getId(),
+      'organization' => $pitcher->getOrganization()?->getId(),
+      'firstName' => $pitcher->getFirstName(),
+      'lastName' => $pitcher->getLastName(),
+      'date' => $pitcher->getDate()?->format('d.m.Y'),
+      'city' => $pitcher->getCity(),
+      'country' => $pitcher->getCountry(),
+      'details' => $pitcher->getDetails(),
+    ]);
   }
 
   /**
