@@ -61,7 +61,17 @@ final class EventController extends AbstractController {
   public function eventGet(): JsonResponse {
     $events = $this->entityManager->getRepository(Event::class)->findAll();
 
-    return new JsonResponse($events);
+    return new JsonResponse(array_map(function ($event) {
+      return [
+        'id' => $event->getId(),
+        'organization' => $event->getOrganization()?->getId(),
+        'name' => $event->getName(),
+        'date' => $event->getDate()?->format('d.m.Y'),
+        'city' => $event->getCity(),
+        'country' => $event->getCountry(),
+        'details' => $event->getDetails(),
+      ];
+    }, $events));
   }
 
   /**
@@ -76,7 +86,15 @@ final class EventController extends AbstractController {
     $event = $this->entityManager->getRepository(Event::class)->find($id);
     if (!$event) return new Response(null, 404);
 
-    return new JsonResponse($event);
+    return new JsonResponse([
+      'id' => $event->getId(),
+      'organization' => $event->getOrganization()?->getId(),
+      'name' => $event->getName(),
+      'date' => $event->getDate()?->format('d.m.Y'),
+      'city' => $event->getCity(),
+      'country' => $event->getCountry(),
+      'details' => $event->getDetails(),
+    ]);
   }
 
   /**
