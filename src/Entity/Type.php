@@ -39,6 +39,9 @@ class Type {
   #[ORM\Column(length: 63)]
   private ?string $name = null; ///< type name
 
+  #[ORM\Column(length: 3)]
+  private ?string $code = null; ///< type 3-letter code
+
   /**
    * @var Collection<int, Pitch>
    */
@@ -79,6 +82,28 @@ class Type {
    */
   public function setName(string $name): static {
     $this->name = $name;
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the type 3-letter code
+   *
+   * @return string|null code
+   */
+  public function getCode(): ?string {
+    return $this->code;
+  }
+
+  /**
+   * @brief Sets the type 3-letter code
+   *
+   * @param string $code code
+   *
+   * @return static self reference
+   */
+  public function setCode(string $code): static {
+    $this->code = $code;
 
     return $this;
   }

@@ -62,6 +62,7 @@ final class TypeController extends AbstractController {
       return [
         'id' => $type->getId(),
         'name' => $type->getName(),
+        'code' => $type->getCode(),
       ];
     }, $types));
   }
@@ -81,6 +82,7 @@ final class TypeController extends AbstractController {
     return new JsonResponse([
       'id' => $type->getId(),
       'name' => $type->getName(),
+      'code' => $type->getCode(),
     ]);
   }
 
@@ -98,6 +100,7 @@ final class TypeController extends AbstractController {
     $type = new Type();
 
     if (property_exists($data, 'name')) $type->setName($data->name);
+    if (property_exists($data, 'code')) $type->setCode($data->code);
 
     $errors = $this->validator->validate($type);
     if (count($errors) > 0) return new Response($errors, 400);
@@ -124,6 +127,7 @@ final class TypeController extends AbstractController {
     if (!$type) return new Response(null, 404);
 
     if (property_exists($data, 'name')) $type->setName($data->name);
+    if (property_exists($data, 'code')) $type->setCode($data->code);
 
     $errors = $this->validator->validate($type);
     if (count($errors) > 0) return new Response($errors, 400);

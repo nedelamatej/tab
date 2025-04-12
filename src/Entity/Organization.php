@@ -126,7 +126,7 @@ class Organization {
   }
 
   /**
-   * @brief Gets the organization origin city
+   * @brief Gets the organization city of foundation
    *
    * @return string|null city
    */
@@ -135,7 +135,7 @@ class Organization {
   }
 
   /**
-   * @brief Sets the organization origin city
+   * @brief Sets the organization city of foundation
    *
    * @param string|null $city city
    *
@@ -148,7 +148,7 @@ class Organization {
   }
 
   /**
-   * @brief Gets the organization origin country
+   * @brief Gets the organization country of foundation
    *
    * @return string|null country
    */
@@ -157,7 +157,7 @@ class Organization {
   }
 
   /**
-   * @brief Sets the organization origin country
+   * @brief Sets the organization country of foundation
    *
    * @param string|null $country country
    *

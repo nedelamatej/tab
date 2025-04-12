@@ -93,6 +93,7 @@ CREATE TABLE pitcher (id INT AUTO_INCREMENT NOT NULL,
 CREATE TABLE type (
   id              INT AUTO_INCREMENT NOT NULL,
   name            VARCHAR(63) NOT NULL,
+  code            VARCHAR(3) NOT NULL,
   PRIMARY         KEY(id)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
