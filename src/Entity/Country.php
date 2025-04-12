@@ -49,6 +49,12 @@ class Country {
   private Collection $organizations; ///< organizations with this country
 
   /**
+   * @var Collection<int, Event>
+   */
+  #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'country')]
+  private Collection $events; ///< events with this country
+
+  /**
    * @var Collection<int, Pitcher>
    */
   #[ORM\OneToMany(targetEntity: Pitcher::class, mappedBy: 'country')]
@@ -59,6 +65,7 @@ class Country {
    */
   public function __construct() {
     $this->organizations = new ArrayCollection();
+    $this->events = new ArrayCollection();
     $this->pitchers = new ArrayCollection();
   }
 
@@ -151,6 +158,48 @@ class Country {
     if ($this->organizations->removeElement($organization)) {
       if ($organization->getCountry() === $this) {
         $organization->setCountry(null);
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the events with this country
+   *
+   * @return Collection<int, Event> events
+   */
+  public function getEvents(): Collection {
+    return $this->events;
+  }
+
+  /**
+   * @brief Adds an event to this country
+   *
+   * @param Event $event event to add
+   *
+   * @return static self reference
+   */
+  public function addEvent(Event $event): static {
+    if (!$this->events->contains($event)) {
+      $this->events->add($event);
+      $event->setCountry($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * @brief Removes an event from this country
+   *
+   * @param Event $event event to remove
+   *
+   * @return static self reference
+   */
+  public function removeEvent(Event $event): static {
+    if ($this->events->removeElement($event)) {
+      if ($event->getCountry() === $this) {
+        $event->setCountry(null);
       }
     }
 

@@ -30,6 +30,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use App\Entity\Event;
 use App\Entity\Organization;
+use App\Entity\Country;
 
 use DateTime;
 
@@ -68,7 +69,7 @@ final class EventController extends AbstractController {
         'name' => $event->getName(),
         'date' => $event->getDate()?->format('d.m.Y'),
         'city' => $event->getCity(),
-        'country' => $event->getCountry(),
+        'country' => $event->getCountry()?->getId(),
         'details' => $event->getDetails(),
       ];
     }, $events));
@@ -92,7 +93,7 @@ final class EventController extends AbstractController {
       'name' => $event->getName(),
       'date' => $event->getDate()?->format('d.m.Y'),
       'city' => $event->getCity(),
-      'country' => $event->getCountry(),
+      'country' => $event->getCountry()?->getId(),
       'details' => $event->getDetails(),
     ]);
   }
@@ -110,11 +111,11 @@ final class EventController extends AbstractController {
 
     $event = new Event();
 
-    if (property_exists($data, 'organization')) $event->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
+    if (property_exists($data, 'organization')) $event->setOrganization($data->organization ? $this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null : null);
     if (property_exists($data, 'name')) $event->setName($data->name);
     if (property_exists($data, 'date')) $event->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
     if (property_exists($data, 'city')) $event->setCity($data->city);
-    if (property_exists($data, 'country')) $event->setCountry($data->country);
+    if (property_exists($data, 'country')) $event->setCountry($data->country ? $this->entityManager->getRepository(Country::class)?->find($data->country) ?? null : null);
     if (property_exists($data, 'details')) $event->setDetails($data->details);
 
     $errors = $this->validator->validate($event);
@@ -141,11 +142,11 @@ final class EventController extends AbstractController {
     $event = $this->entityManager->getRepository(Event::class)->find($id);
     if (!$event) return new Response(null, 404);
 
-    if (property_exists($data, 'organization')) $event->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
+    if (property_exists($data, 'organization')) $event->setOrganization($data->organization ? $this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null : null);
     if (property_exists($data, 'name')) $event->setName($data->name);
     if (property_exists($data, 'date')) $event->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
     if (property_exists($data, 'city')) $event->setCity($data->city);
-    if (property_exists($data, 'country')) $event->setCountry($data->country);
+    if (property_exists($data, 'country')) $event->setCountry($data->country ? $this->entityManager->getRepository(Country::class)?->find($data->country) ?? null : null);
     if (property_exists($data, 'details')) $event->setDetails($data->details);
 
     $errors = $this->validator->validate($event);

@@ -232,7 +232,7 @@ class Pitch {
   /**
    * @brief Gets the pitch type
    *
-   * @return Type|null pitch type
+   * @return Type|null type
    */
   public function getType(): ?Type {
     return $this->type;
@@ -241,7 +241,7 @@ class Pitch {
   /**
    * @brief Sets the pitch type
    *
-   * @param Type|null $type pitch type
+   * @param Type|null $type type
    *
    * @return static self reference
    */

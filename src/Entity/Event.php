@@ -50,8 +50,9 @@ class Event {
   #[ORM\Column(length: 63, nullable: true)]
   private ?string $city = null; ///< event city of occurrence (optional)
 
-  #[ORM\Column(length: 63, nullable: true)]
-  private ?string $country = null; ///< event country of occurrence (optional)
+  #[ORM\ManyToOne(inversedBy: 'events')]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?Country $country = null; ///< event country of occurrence (optional)
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $details = null; ///< event details (optional)
@@ -90,7 +91,7 @@ class Event {
   /**
    * @brief Sets the event organization
    *
-   * @param Organization|null $organization event organization
+   * @param Organization|null $organization organization
    *
    * @return static self reference
    */
@@ -123,7 +124,7 @@ class Event {
   }
 
   /**
-   * @brief Gets the event date
+   * @brief Gets the event date of occurrence
    *
    * @return \DateTimeInterface|null date
    */
@@ -132,9 +133,9 @@ class Event {
   }
 
   /**
-   * @brief Sets the event date
+   * @brief Sets the event date of occurrence
    *
-   * @param \DateTimeInterface|null $date event date
+   * @param \DateTimeInterface|null $date date
    *
    * @return static self reference
    */
@@ -145,7 +146,7 @@ class Event {
   }
 
   /**
-   * @brief Gets the event city
+   * @brief Gets the event city of occurrence
    *
    * @return string|null city
    */
@@ -154,9 +155,9 @@ class Event {
   }
 
   /**
-   * @brief Sets the event city
+   * @brief Sets the event city of occurrence
    *
-   * @param string|null $city event city
+   * @param string|null $city city
    *
    * @return static self reference
    */
@@ -167,22 +168,22 @@ class Event {
   }
 
   /**
-   * @brief Gets the event country
+   * @brief Gets the event country of occurrence
    *
-   * @return string|null country
+   * @return Country|null country
    */
-  public function getCountry(): ?string {
+  public function getCountry(): ?Country {
     return $this->country;
   }
 
   /**
-   * @brief Sets the event country
+   * @brief Sets the event country of occurrence
    *
-   * @param string|null $country event country
+   * @param Country|null $country country
    *
    * @return static self reference
    */
-  public function setCountry(?string $country): static {
+  public function setCountry(?Country $country): static {
     $this->country = $country;
 
     return $this;
@@ -200,7 +201,7 @@ class Event {
   /**
    * @brief Sets the event details
    *
-   * @param string|null $details event details
+   * @param string|null $details details
    *
    * @return static self reference
    */
