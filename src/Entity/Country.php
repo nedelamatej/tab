@@ -49,10 +49,17 @@ class Country {
   private Collection $organizations; ///< organizations with this country
 
   /**
+   * @var Collection<int, Pitcher>
+   */
+  #[ORM\OneToMany(targetEntity: Pitcher::class, mappedBy: 'country')]
+  private Collection $pitchers; ///< pitchers with this country
+
+  /**
    * @brief Constructs new Country object
    */
   public function __construct() {
     $this->organizations = new ArrayCollection();
+    $this->pitchers = new ArrayCollection();
   }
 
   /**
@@ -144,6 +151,48 @@ class Country {
     if ($this->organizations->removeElement($organization)) {
       if ($organization->getCountry() === $this) {
         $organization->setCountry(null);
+      }
+    }
+
+    return $this;
+  }
+
+  /**
+   * @brief Gets the pitchers with this country
+   *
+   * @return Collection<int, Pitcher> pitchers
+   */
+  public function getPitchers(): Collection {
+    return $this->pitchers;
+  }
+
+  /**
+   * @brief Adds a pitcher to this country
+   *
+   * @param Pitcher $pitcher pitcher to add
+   *
+   * @return static self reference
+   */
+  public function addPitcher(Pitcher $pitcher): static {
+    if (!$this->pitchers->contains($pitcher)) {
+      $this->pitchers->add($pitcher);
+      $pitcher->setCountry($this);
+    }
+
+    return $this;
+  }
+
+  /**
+   * @brief Removes a pitcher from this country
+   *
+   * @param Pitcher $pitcher pitcher to remove
+   *
+   * @return static self reference
+   */
+  public function removePitcher(Pitcher $pitcher): static {
+    if ($this->pitchers->removeElement($pitcher)) {
+      if ($pitcher->getCountry() === $this) {
+        $pitcher->setCountry(null);
       }
     }
 

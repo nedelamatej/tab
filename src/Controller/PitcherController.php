@@ -30,6 +30,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use App\Entity\Pitcher;
 use App\Entity\Organization;
+use App\Entity\Country;
 
 use DateTime;
 
@@ -69,7 +70,7 @@ final class PitcherController extends AbstractController {
         'lastName' => $pitcher->getLastName(),
         'date' => $pitcher->getDate()?->format('d.m.Y'),
         'city' => $pitcher->getCity(),
-        'country' => $pitcher->getCountry(),
+        'country' => $pitcher->getCountry()?->getId(),
         'details' => $pitcher->getDetails(),
       ];
     }, $pitchers));
@@ -94,7 +95,7 @@ final class PitcherController extends AbstractController {
       'lastName' => $pitcher->getLastName(),
       'date' => $pitcher->getDate()?->format('d.m.Y'),
       'city' => $pitcher->getCity(),
-      'country' => $pitcher->getCountry(),
+      'country' => $pitcher->getCountry()?->getId(),
       'details' => $pitcher->getDetails(),
     ]);
   }
@@ -112,12 +113,12 @@ final class PitcherController extends AbstractController {
 
     $pitcher = new Pitcher();
 
-    if (property_exists($data, 'organization')) $pitcher->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
+    if (property_exists($data, 'organization')) $pitcher->setOrganization($data->organizatoin ? $this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null : null);
     if (property_exists($data, 'firstName')) $pitcher->setFirstName($data->firstName);
     if (property_exists($data, 'lastName')) $pitcher->setLastName($data->lastName);
     if (property_exists($data, 'date')) $pitcher->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
     if (property_exists($data, 'city')) $pitcher->setCity($data->city);
-    if (property_exists($data, 'country')) $pitcher->setCountry($data->country);
+    if (property_exists($data, 'country')) $pitcher->setCountry($data->country ? $this->entityManager->getRepository(Country::class)?->find($data->country) ?? null : null);
     if (property_exists($data, 'details')) $pitcher->setDetails($data->details);
 
     $errors = $this->validator->validate($pitcher);
@@ -144,12 +145,12 @@ final class PitcherController extends AbstractController {
     $pitcher = $this->entityManager->getRepository(Pitcher::class)->find($id);
     if (!$pitcher) return new Response(null, 404);
 
-    if (property_exists($data, 'organization')) $pitcher->setOrganization($this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null);
+    if (property_exists($data, 'organization')) $pitcher->setOrganization($data->organization ? $this->entityManager->getRepository(Organization::class)?->find($data->organization) ?? null : null);
     if (property_exists($data, 'firstName')) $pitcher->setFirstName($data->firstName);
     if (property_exists($data, 'lastName')) $pitcher->setLastName($data->lastName);
     if (property_exists($data, 'date')) $pitcher->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
     if (property_exists($data, 'city')) $pitcher->setCity($data->city);
-    if (property_exists($data, 'country')) $pitcher->setCountry($data->country);
+    if (property_exists($data, 'country')) $pitcher->setCountry($data->country ? $this->entityManager->getRepository(Country::class)?->find($data->country) ?? null : null);
     if (property_exists($data, 'details')) $pitcher->setDetails($data->details);
 
     $errors = $this->validator->validate($pitcher);

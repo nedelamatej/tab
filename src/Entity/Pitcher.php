@@ -53,8 +53,9 @@ class Pitcher {
   #[ORM\Column(length: 63, nullable: true)]
   private ?string $city = null; ///< pitcher city of birth (optional)
 
-  #[ORM\Column(length: 63, nullable: true)]
-  private ?string $country = null; ///< pitcher country of birth (optional)
+  #[ORM\ManyToOne(inversedBy: 'pitchers')]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?Country $country = null; ///< pitcher country of birth (optional)
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $details = null; ///< pitcher details (optional)
@@ -194,20 +195,20 @@ class Pitcher {
   /**
    * @brief Gets the pitcher country of birth
    *
-   * @return string|null country
+   * @return Country|null country
    */
-  public function getCountry(): ?string {
+  public function getCountry(): ?Country {
     return $this->country;
   }
 
   /**
    * @brief Sets the pitcher country of birth
    *
-   * @param string|null $country country
+   * @param Country|null $country country
    *
    * @return static self reference
    */
-  public function setCountry(?string $country): static {
+  public function setCountry(?Country $country): static {
     $this->country = $country;
 
     return $this;
