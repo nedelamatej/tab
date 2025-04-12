@@ -29,6 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use App\Entity\Organization;
+use App\Entity\Country;
 
 use DateTime;
 
@@ -66,7 +67,7 @@ final class OrganizationController extends AbstractController {
         'name' => $organization->getName(),
         'date' => $organization->getDate()?->format('d.m.Y'),
         'city' => $organization->getCity(),
-        'country' => $organization->getCountry(),
+        'country' => $organization->getCountry()?->getId(),
         'details' => $organization->getDetails(),
       ];
     }, $organizations));
@@ -89,7 +90,7 @@ final class OrganizationController extends AbstractController {
       'name' => $organization->getName(),
       'date' => $organization->getDate()?->format('d.m.Y'),
       'city' => $organization->getCity(),
-      'country' => $organization->getCountry(),
+      'country' => $organization->getCountry()?->getId(),
       'details' => $organization->getDetails(),
     ]);
   }
@@ -110,7 +111,7 @@ final class OrganizationController extends AbstractController {
     if (property_exists($data, 'name')) $organization->setName($data->name);
     if (property_exists($data, 'date')) $organization->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
     if (property_exists($data, 'city')) $organization->setCity($data->city);
-    if (property_exists($data, 'country')) $organization->setCountry($data->country);
+    if (property_exists($data, 'country')) $organization->setCountry($data->country ? $this->entityManager->getRepository(Country::class)?->find($data->country) ?? null : null);
     if (property_exists($data, 'details')) $organization->setDetails($data->details);
 
     $errors = $this->validator->validate($organization);
@@ -140,7 +141,7 @@ final class OrganizationController extends AbstractController {
     if (property_exists($data, 'name')) $organization->setName($data->name);
     if (property_exists($data, 'date')) $organization->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
     if (property_exists($data, 'city')) $organization->setCity($data->city);
-    if (property_exists($data, 'country')) $organization->setCountry($data->country);
+    if (property_exists($data, 'country')) $organization->setCountry($data->country ? $this->entityManager->getRepository(Country::class)?->find($data->country) ?? null : null);
     if (property_exists($data, 'details')) $organization->setDetails($data->details);
 
     $errors = $this->validator->validate($organization);

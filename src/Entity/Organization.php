@@ -46,8 +46,9 @@ class Organization {
   #[ORM\Column(length: 63, nullable: true)]
   private ?string $city = null; ///< organization city of foundation (optional)
 
-  #[ORM\Column(length: 63, nullable: true)]
-  private ?string $country = null; ///< organization country of foundation (optional)
+  #[ORM\ManyToOne(inversedBy: 'organizations')]
+  #[ORM\JoinColumn(nullable: false)]
+  private ?Country $country = null; ///< organization country of foundation
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $details = null; ///< organization details (optional)
@@ -150,20 +151,20 @@ class Organization {
   /**
    * @brief Gets the organization country of foundation
    *
-   * @return string|null country
+   * @return Country|null country
    */
-  public function getCountry(): ?string {
+  public function getCountry(): ?Country {
     return $this->country;
   }
 
   /**
    * @brief Sets the organization country of foundation
    *
-   * @param string|null $country country
+   * @param Country|null $country country
    *
    * @return static self reference
    */
-  public function setCountry(?string $country): static {
+  public function setCountry(?Country $country): static {
     $this->country = $country;
 
     return $this;
