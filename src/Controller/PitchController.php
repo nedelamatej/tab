@@ -75,6 +75,8 @@ final class PitchController extends AbstractController {
     return new JsonResponse(array_map(function ($pitch) {
       return [
         'id' => $pitch->getId(),
+        'idx' => $pitch->getId(),
+        'cnt' => $this->entityManager->getRepository(Pitch::class)->count([]),
         'date' => $pitch->getDate()?->format('d.m.Y'),
         'time' => $pitch->getTime()?->format('H:i'),
         'event' => $pitch->getEvent()?->getId(),
@@ -111,10 +113,70 @@ final class PitchController extends AbstractController {
   #[Route(['/{id}', '/get/{id}'], methods: ['GET'])]
   public function pitchGetId(int $id): JsonResponse {
     $pitch = $this->entityManager->getRepository(Pitch::class)->find($id);
-    if (!$pitch) return new Response(null, 404);
+    if (!$pitch) return new JsonResponse(null, 404);
 
     return new JsonResponse([
       'id' => $pitch->getId(),
+      'idx' => $pitch->getId(),
+      'cnt' => $this->entityManager->getRepository(Pitch::class)->count([]),
+      'date' => $pitch->getDate()?->format('d.m.Y'),
+      'time' => $pitch->getTime()?->format('H:i'),
+      'event' => $pitch->getEvent()?->getId(),
+      'pitcher' => $pitch->getPitcher()?->getId(),
+      'type' => $pitch->getType()?->getId(),
+      't' => $pitch->getT(),
+      'alpha' => $pitch->getAlpha(),
+      'omega' => $pitch->getOmega(),
+      'xyz_0' => $pitch->getXyz_0(),
+      'v_0' => $pitch->getV_0(),
+      'phi_0' => $pitch->getPhi_0(),
+      'theta_0' => $pitch->getTheta_0(),
+      'xyz_t' => $pitch->getXyz_t(),
+      'v_t' => $pitch->getV_t(),
+      'phi_t' => $pitch->getPhi_t(),
+      'theta_t' => $pitch->getTheta_t(),
+      'xyz_1' => $pitch->getXyz_1(),
+      'xyz_2' => $pitch->getXyz_2(),
+      'xyz_3' => $pitch->getXyz_3(),
+      'c_d' => $pitch->getC_d(),
+      'c_l' => $pitch->getC_l(),
+      'delta' => $pitch->getDelta(),
+    ]);
+  }
+
+  /**
+   * @brief Gets one pitch by idx
+   *
+   * @param int $eventId event id
+   * @param int $pitcherId pitcher id
+   * @param int $idx pitch idx
+   *
+   * @return JsonResponse pitch
+   */
+  #[Route(['/{eventId}/{pitcherId}/{idx}', '/get/{eventId}/{pitcherId}/{idx}'], methods: ['GET'])]
+  public function pitchGetIdx(int $eventId, int $pitcherId, int $idx): JsonResponse {
+    $criteria = [];
+
+    if ($eventId) {
+      $event = $this->entityManager->getRepository(Event::class)->find($eventId);
+      if (!$event) return new JsonResponse(null, 404);
+      $criteria['event'] = $event;
+    }
+
+    if ($pitcherId) {
+      $pitcher = $this->entityManager->getRepository(Pitcher::class)->find($pitcherId);
+      if (!$pitcher) return new JsonResponse(null, 404);
+      $criteria['pitcher'] = $pitcher;
+    }
+
+    $pitch = $this->entityManager->getRepository(Pitch::class)->findBy($criteria, ['id' => 'ASC'], 1, $idx - 1);
+    if (!$pitch) return new JsonResponse(null, 404);
+    $pitch = $pitch[0];
+
+    return new JsonResponse([
+      'id' => $pitch->getId(),
+      'idx' => $idx,
+      'cnt' => $this->entityManager->getRepository(Pitch::class)->count($criteria),
       'date' => $pitch->getDate()?->format('d.m.Y'),
       'time' => $pitch->getTime()?->format('H:i'),
       'event' => $pitch->getEvent()?->getId(),
@@ -155,9 +217,9 @@ final class PitchController extends AbstractController {
 
     if (property_exists($data, 'date')) $pitch->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
     if (property_exists($data, 'time')) $pitch->setTime(DateTime::createFromFormat('H:i', $data->time) ?: null);
-    if (property_exists($data, 'event')) $pitch->setEvent($this->entityManager->getRepository(Event::class)?->find($data->event) ?? null);
-    if (property_exists($data, 'pitcher')) $pitch->setPitcher($this->entityManager->getRepository(Pitcher::class)?->find($data->pitcher) ?? null);
-    if (property_exists($data, 'type')) $pitch->setType($this->entityManager->getRepository(Type::class)?->find($data->type) ?? null);
+    if (property_exists($data, 'event')) $pitch->setEvent($data->event ? $this->entityManager->getRepository(Event::class)?->find($data->event) ?? null : null);
+    if (property_exists($data, 'pitcher')) $pitch->setPitcher($data->pitcher ? $this->entityManager->getRepository(Pitcher::class)?->find($data->pitcher) ?? null : null);
+    if (property_exists($data, 'type')) $pitch->setType($data->type ? $this->entityManager->getRepository(Type::class)?->find($data->type) ?? null : null);
     if (property_exists($data, 't')) $pitch->setT($data->t);
     if (property_exists($data, 'alpha')) $pitch->setAlpha($data->alpha);
     if (property_exists($data, 'omega')) $pitch->setOmega($data->omega);
@@ -240,9 +302,9 @@ final class PitchController extends AbstractController {
 
     if (property_exists($data, 'date')) $pitch->setDate(DateTime::createFromFormat('d.m.Y', $data->date) ?: null);
     if (property_exists($data, 'time')) $pitch->setTime(DateTime::createFromFormat('H:i', $data->time) ?: null);
-    if (property_exists($data, 'event')) $pitch->setEvent($this->entityManager->getRepository(Event::class)?->find($data->event) ?? null);
-    if (property_exists($data, 'pitcher')) $pitch->setPitcher($this->entityManager->getRepository(Pitcher::class)?->find($data->pitcher) ?? null);
-    if (property_exists($data, 'type')) $pitch->setType($this->entityManager->getRepository(Type::class)?->find($data->type) ?? null);
+    if (property_exists($data, 'event')) $pitch->setEvent($data->event ? $this->entityManager->getRepository(Event::class)?->find($data->event) ?? null : null);
+    if (property_exists($data, 'pitcher')) $pitch->setPitcher($data->pitcher ? $this->entityManager->getRepository(Pitcher::class)?->find($data->pitcher) ?? null : null);
+    if (property_exists($data, 'type')) $pitch->setType($data->type ? $this->entityManager->getRepository(Type::class)?->find($data->type) ?? null : null);
     if (property_exists($data, 't')) $pitch->setT($data->t);
     if (property_exists($data, 'alpha')) $pitch->setAlpha($data->alpha);
     if (property_exists($data, 'omega')) $pitch->setOmega($data->omega);
@@ -259,45 +321,50 @@ final class PitchController extends AbstractController {
     if (property_exists($data, 'phi_t')) $pitch->setPhi_t($data->phi_t);
     if (property_exists($data, 'theta_t')) $pitch->setTheta_t($data->theta_t);
 
-    $mooreNeighborhood = new MooreNeighborhood(0.2, 0.0, 0.5, 1.0);
-    $rungeKutta4Method = new RungeKutta4Method(99, $pitch->getT());
+    if (array_reduce(
+      ['t', 'alpha', 'omega', 'x_0', 'y_0', 'z_0', 'v_0', 'phi_0', 'theta_0', 'x_t', 'y_t', 'z_t', 'v_t', 'phi_t', 'theta_t'],
+      fn ($c, $p) => $c || property_exists($data, $p),
+    )) {
+      $mooreNeighborhood = new MooreNeighborhood(0.2, 0.0, 0.5, 1.0);
+      $rungeKutta4Method = new RungeKutta4Method(99, $pitch->getT());
 
-    $state = [...$pitch->getXyz_0(), ...$pitch->getV_xyz_0()];
+      $state = [...$pitch->getXyz_0(), ...$pitch->getV_xyz_0()];
 
-    [$c_d, $c_l] = $mooreNeighborhood->approx(function ($c_d, $c_l) use ($pitch, $state, $rungeKutta4Method) {
+      [$c_d, $c_l] = $mooreNeighborhood->approx(function ($c_d, $c_l) use ($pitch, $state, $rungeKutta4Method) {
+        $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
+
+        $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
+
+        return EuclideanDistance::calc($pitch->getXyz_t(), end($solution));
+      });
+
       $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
 
       $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
 
-      return EuclideanDistance::calc($pitch->getXyz_t(), end($solution));
-    });
+      $pitch->setC_d($c_d);
+      $pitch->setC_l($c_l);
+      $pitch->setDelta(EuclideanDistance::calc($pitch->getXyz_t(), end($solution)));
 
-    $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
+      $matrix = [];
 
-    $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
-
-    $pitch->setC_d($c_d);
-    $pitch->setC_l($c_l);
-    $pitch->setDelta(EuclideanDistance::calc($pitch->getXyz_t(), end($solution)));
-
-    $matrix = [];
-
-    for ($i = 0; $i < count($solution); ++$i) {
-      for ($j = 0; $j < 4; ++$j) {
-        $matrix[$i][$j] = BernsteinPolynomial::calc($j, 3, 1 / (count($solution) - 1) * $i);
+      for ($i = 0; $i < count($solution); ++$i) {
+        for ($j = 0; $j < 4; ++$j) {
+          $matrix[$i][$j] = BernsteinPolynomial::calc($j, 3, 1 / (count($solution) - 1) * $i);
+        }
       }
+
+      $B = MatrixFactory::createNumeric($matrix);
+      $BTBBT = $B->transpose()->multiply($B)->inverse()->multiply($B->transpose());
+
+      $x = $BTBBT->vectorMultiply(new Vector(array_column($solution, 0)));
+      $y = $BTBBT->vectorMultiply(new Vector(array_column($solution, 1)));
+      $z = $BTBBT->vectorMultiply(new Vector(array_column($solution, 2)));
+
+      $pitch->setXyz_1([$x->get(1), $y->get(1), $z->get(1)]);
+      $pitch->setXyz_2([$x->get(2), $y->get(2), $z->get(2)]);
+      $pitch->setXyz_3([$x->get(3), $y->get(3), $z->get(3)]);
     }
-
-    $B = MatrixFactory::createNumeric($matrix);
-    $BTBBT = $B->transpose()->multiply($B)->inverse()->multiply($B->transpose());
-
-    $x = $BTBBT->vectorMultiply(new Vector(array_column($solution, 0)));
-    $y = $BTBBT->vectorMultiply(new Vector(array_column($solution, 1)));
-    $z = $BTBBT->vectorMultiply(new Vector(array_column($solution, 2)));
-
-    $pitch->setXyz_1([$x->get(1), $y->get(1), $z->get(1)]);
-    $pitch->setXyz_2([$x->get(2), $y->get(2), $z->get(2)]);
-    $pitch->setXyz_3([$x->get(3), $y->get(3), $z->get(3)]);
 
     $errors = $this->validator->validate($pitch);
     if (count($errors) > 0) return new Response($errors, 400);
