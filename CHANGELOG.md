@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2025-04-14
+
+### BREAKING CHANGES
+
+- Added required property `code` to `Type` entity.
+- Added required relation `country` to `Organization` entity.
+- Added required relation `country` to `Event` entity.
+- Added required relation `country` to `Pitcher` entity.
+- Updated database `setup` and `teardown` scripts.
+
+### Added
+
+- Added `Country` entity, repository and controller.
+- Added more `GET` endpoints to `Event` controller.
+- Added more `GET` endpoints to `Pitcher` controller.
+- Added more `GET` endpoints to `Pitch` controller.
+- Installed `cors-bundle` library.
+
 ## [0.1.0] - 2025-03-30
 
 ### Added
