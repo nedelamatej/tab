@@ -39,7 +39,7 @@ class Pitcher {
 
   #[ORM\ManyToOne(inversedBy: 'pitchers')]
   #[ORM\JoinColumn(nullable: false)]
-  private ?Organization $organization = null; ///< pitcher organization (optional)
+  private ?Organization $organization = null; ///< pitcher organization
 
   #[ORM\Column(length: 31)]
   private ?string $firstName = null; ///< pitcher first name
@@ -55,7 +55,7 @@ class Pitcher {
 
   #[ORM\ManyToOne(inversedBy: 'pitchers')]
   #[ORM\JoinColumn(nullable: false)]
-  private ?Country $country = null; ///< pitcher country of birth (optional)
+  private ?Country $country = null; ///< pitcher country of birth
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $details = null; ///< pitcher details (optional)
