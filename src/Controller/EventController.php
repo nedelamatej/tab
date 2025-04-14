@@ -30,6 +30,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 use App\Entity\Event;
 use App\Entity\Organization;
+use App\Entity\Pitcher;
+use App\Entity\Pitch;
 use App\Entity\Country;
 
 use DateTime;
@@ -61,6 +63,64 @@ final class EventController extends AbstractController {
   #[Route(['/', '/get'], methods: ['GET'])]
   public function eventGet(): JsonResponse {
     $events = $this->entityManager->getRepository(Event::class)->findAll();
+
+    return new JsonResponse(array_map(function ($event) {
+      return [
+        'id' => $event->getId(),
+        'organization' => $event->getOrganization()?->getId(),
+        'name' => $event->getName(),
+        'date' => $event->getDate()?->format('d.m.Y'),
+        'city' => $event->getCity(),
+        'country' => $event->getCountry()?->getId(),
+        'details' => $event->getDetails(),
+      ];
+    }, $events));
+  }
+
+  /**
+   * @brief Gets all events by organization
+   *
+   * @param int $organizationId organization id
+   *
+   * @return JsonResponse events
+   */
+  #[Route(['/organization/{organizationId}', '/get/organization/{organizationId}'], methods: ['GET'])]
+  public function eventGetOrganizationId(int $organizationId): JsonResponse {
+    $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
+    if (!$organization) return new Response(null, 404);
+
+    $events = $organization->getEvents();
+
+    return new JsonResponse(array_map(function ($event) {
+      return [
+        'id' => $event->getId(),
+        'organization' => $event->getOrganization()?->getId(),
+        'name' => $event->getName(),
+        'date' => $event->getDate()?->format('d.m.Y'),
+        'city' => $event->getCity(),
+        'country' => $event->getCountry()?->getId(),
+        'details' => $event->getDetails(),
+      ];
+    }, $events->toArray()));
+  }
+
+  /**
+   * @brief Gets all events by pitcher
+   *
+   * @param int $pitcherId pitcher id
+   *
+   * @return JsonResponse events
+   */
+  #[Route(['/pitcher/{pitcherId}', '/get/pitcher/{pitcherId}'], methods: ['GET'])]
+  public function eventGetPitcherId(int $pitcherId): JsonResponse {
+    $pitcher = $this->entityManager->getRepository(Pitcher::class)->find($pitcherId);
+    if (!$pitcher) return new Response(null, 404);
+
+    $pitches = $this->entityManager->getRepository(Pitch::class)->findBy(['pitcher' => $pitcher]);
+
+    $events = array_unique(array_map(function ($pitch) {
+      return $pitch->getEvent();
+    }, $pitches), SORT_REGULAR);
 
     return new JsonResponse(array_map(function ($event) {
       return [

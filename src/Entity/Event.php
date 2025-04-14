@@ -39,7 +39,7 @@ class Event {
 
   #[ORM\ManyToOne(inversedBy: 'events')]
   #[ORM\JoinColumn(nullable: false)]
-  private ?Organization $organization = null; ///< event organization (optional)
+  private ?Organization $organization = null; ///< event organization
 
   #[ORM\Column(length: 63)]
   private ?string $name = null; ///< event name
@@ -52,7 +52,7 @@ class Event {
 
   #[ORM\ManyToOne(inversedBy: 'events')]
   #[ORM\JoinColumn(nullable: false)]
-  private ?Country $country = null; ///< event country of occurrence (optional)
+  private ?Country $country = null; ///< event country of occurrence
 
   #[ORM\Column(length: 255, nullable: true)]
   private ?string $details = null; ///< event details (optional)
