@@ -28,19 +28,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-use MathPHP\LinearAlgebra\MatrixFactory;
-use MathPHP\LinearAlgebra\Vector;
-
 use App\Entity\Pitch;
 use App\Entity\Event;
 use App\Entity\Pitcher;
 use App\Entity\Type;
 
-use App\Service\BernsteinPolynomial;
-use App\Service\DifferentialEquations\SoftballEquations;
-use App\Service\DistanceMetric\EuclideanDistance;
-use App\Service\NeighborhoodSearch\MooreNeighborhood;
-use App\Service\NumericalMethod\RungeKutta4Method;
+use App\Service\PitchService;
 
 use DateTime;
 
@@ -236,45 +229,7 @@ final class PitchController extends AbstractController {
     if (property_exists($data, 'phi_t')) $pitch->setPhi_t($data->phi_t);
     if (property_exists($data, 'theta_t')) $pitch->setTheta_t($data->theta_t);
 
-    $mooreNeighborhood = new MooreNeighborhood(0.2, 0.0, 0.5, 1.0);
-    $rungeKutta4Method = new RungeKutta4Method(99, $pitch->getT());
-
-    $state = [...$pitch->getXyz_0(), ...$pitch->getV_xyz_0()];
-
-    [$c_d, $c_l] = $mooreNeighborhood->approx(function ($c_d, $c_l) use ($pitch, $state, $rungeKutta4Method) {
-      $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
-
-      $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
-
-      return EuclideanDistance::calc($pitch->getXyz_t(), end($solution));
-    });
-
-    $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
-
-    $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
-
-    $pitch->setC_d($c_d);
-    $pitch->setC_l($c_l);
-    $pitch->setDelta(EuclideanDistance::calc($pitch->getXyz_t(), end($solution)));
-
-    $matrix = [];
-
-    for ($i = 0; $i < count($solution); ++$i) {
-      for ($j = 0; $j < 4; ++$j) {
-        $matrix[$i][$j] = BernsteinPolynomial::calc($j, 3, 1 / (count($solution) - 1) * $i);
-      }
-    }
-
-    $B = MatrixFactory::createNumeric($matrix);
-    $BTBBT = $B->transpose()->multiply($B)->inverse()->multiply($B->transpose());
-
-    $x = $BTBBT->vectorMultiply(new Vector(array_column($solution, 0)));
-    $y = $BTBBT->vectorMultiply(new Vector(array_column($solution, 1)));
-    $z = $BTBBT->vectorMultiply(new Vector(array_column($solution, 2)));
-
-    $pitch->setXyz_1([$x->get(1), $y->get(1), $z->get(1)]);
-    $pitch->setXyz_2([$x->get(2), $y->get(2), $z->get(2)]);
-    $pitch->setXyz_3([$x->get(3), $y->get(3), $z->get(3)]);
+    PitchService::calc($pitch);
 
     $errors = $this->validator->validate($pitch);
     if (count($errors) > 0) return new Response($errors, 400);
@@ -325,45 +280,7 @@ final class PitchController extends AbstractController {
       ['t', 'alpha', 'omega', 'x_0', 'y_0', 'z_0', 'v_0', 'phi_0', 'theta_0', 'x_t', 'y_t', 'z_t', 'v_t', 'phi_t', 'theta_t'],
       fn ($c, $p) => $c || property_exists($data, $p),
     )) {
-      $mooreNeighborhood = new MooreNeighborhood(0.2, 0.0, 0.5, 1.0);
-      $rungeKutta4Method = new RungeKutta4Method(99, $pitch->getT());
-
-      $state = [...$pitch->getXyz_0(), ...$pitch->getV_xyz_0()];
-
-      [$c_d, $c_l] = $mooreNeighborhood->approx(function ($c_d, $c_l) use ($pitch, $state, $rungeKutta4Method) {
-        $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
-
-        $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
-
-        return EuclideanDistance::calc($pitch->getXyz_t(), end($solution));
-      });
-
-      $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
-
-      $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
-
-      $pitch->setC_d($c_d);
-      $pitch->setC_l($c_l);
-      $pitch->setDelta(EuclideanDistance::calc($pitch->getXyz_t(), end($solution)));
-
-      $matrix = [];
-
-      for ($i = 0; $i < count($solution); ++$i) {
-        for ($j = 0; $j < 4; ++$j) {
-          $matrix[$i][$j] = BernsteinPolynomial::calc($j, 3, 1 / (count($solution) - 1) * $i);
-        }
-      }
-
-      $B = MatrixFactory::createNumeric($matrix);
-      $BTBBT = $B->transpose()->multiply($B)->inverse()->multiply($B->transpose());
-
-      $x = $BTBBT->vectorMultiply(new Vector(array_column($solution, 0)));
-      $y = $BTBBT->vectorMultiply(new Vector(array_column($solution, 1)));
-      $z = $BTBBT->vectorMultiply(new Vector(array_column($solution, 2)));
-
-      $pitch->setXyz_1([$x->get(1), $y->get(1), $z->get(1)]);
-      $pitch->setXyz_2([$x->get(2), $y->get(2), $z->get(2)]);
-      $pitch->setXyz_3([$x->get(3), $y->get(3), $z->get(3)]);
+      PitchService::calc($pitch);
     }
 
     $errors = $this->validator->validate($pitch);
