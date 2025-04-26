@@ -57,6 +57,29 @@ final class PitchController extends AbstractController {
   }
 
   /**
+   * @brief Compares two pitches
+   *
+   * @param int $idA pitch A id
+   * @param int $idB pitch B id
+   *
+   * @return JsonResponse comparison result
+   */
+  #[Route('/comp/{idA}/{idB}', methods: ['GET'])]
+  public function pitchCompId(int $idA, int $idB): JsonResponse  {
+    $pitchA = $this->entityManager->getRepository(Pitch::class)->find($idA);
+    if (!$pitchA) return new Response(null, 404);
+
+    $pitchB = $this->entityManager->getRepository(Pitch::class)->find($idB);
+    if (!$pitchB) return new Response(null, 404);
+
+    return new JsonResponse([
+      'half' => PitchService::compHalf($pitchA, $pitchB),
+      'last' => PitchService::compLast($pitchA, $pitchB),
+      'diff' => PitchService::compDiff($pitchA, $pitchB),
+    ]);
+  }
+
+  /**
    * @brief Gets all pitches
    *
    * @return JsonResponse pitches
@@ -72,8 +95,15 @@ final class PitchController extends AbstractController {
         'cnt' => $this->entityManager->getRepository(Pitch::class)->count([]),
         'date' => $pitch->getDate()?->format('d.m.Y'),
         'time' => $pitch->getTime()?->format('H:i'),
-        'event' => $pitch->getEvent()?->getId(),
-        'pitcher' => $pitch->getPitcher()?->getId(),
+        'event' => [
+          'name' => $pitch->getEvent()?->getName(),
+          'country' => $pitch->getEvent()?->getCountry()?->getCode(),
+        ],
+        'pitcher' => [
+          'firstName' => $pitch->getPitcher()?->getFirstName(),
+          'lastName' => $pitch->getPitcher()?->getLastName(),
+          'country' => $pitch->getPitcher()?->getCountry()?->getCode(),
+        ],
         'type' => $pitch->getType()?->getId(),
         't' => $pitch->getT(),
         'alpha' => $pitch->getAlpha(),
@@ -114,9 +144,16 @@ final class PitchController extends AbstractController {
       'cnt' => $this->entityManager->getRepository(Pitch::class)->count([]),
       'date' => $pitch->getDate()?->format('d.m.Y'),
       'time' => $pitch->getTime()?->format('H:i'),
-      'event' => $pitch->getEvent()?->getId(),
-      'pitcher' => $pitch->getPitcher()?->getId(),
-      'type' => $pitch->getType()?->getId(),
+      'event' => [
+        'name' => $pitch->getEvent()?->getName(),
+        'country' => $pitch->getEvent()?->getCountry()?->getCode(),
+      ],
+      'pitcher' => [
+        'firstName' => $pitch->getPitcher()?->getFirstName(),
+        'lastName' => $pitch->getPitcher()?->getLastName(),
+        'country' => $pitch->getPitcher()?->getCountry()?->getCode(),
+      ],
+    'type' => $pitch->getType()?->getId(),
       't' => $pitch->getT(),
       'alpha' => $pitch->getAlpha(),
       'omega' => $pitch->getOmega(),
@@ -172,8 +209,15 @@ final class PitchController extends AbstractController {
       'cnt' => $this->entityManager->getRepository(Pitch::class)->count($criteria),
       'date' => $pitch->getDate()?->format('d.m.Y'),
       'time' => $pitch->getTime()?->format('H:i'),
-      'event' => $pitch->getEvent()?->getId(),
-      'pitcher' => $pitch->getPitcher()?->getId(),
+      'event' => [
+        'name' => $pitch->getEvent()?->getName(),
+        'country' => $pitch->getEvent()?->getCountry()?->getCode(),
+      ],
+      'pitcher' => [
+        'firstName' => $pitch->getPitcher()?->getFirstName(),
+        'lastName' => $pitch->getPitcher()?->getLastName(),
+        'country' => $pitch->getPitcher()?->getCountry()?->getCode(),
+      ],
       'type' => $pitch->getType()?->getId(),
       't' => $pitch->getT(),
       'alpha' => $pitch->getAlpha(),
