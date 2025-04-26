@@ -34,7 +34,7 @@ final class ChebyshevDistance extends AbstractDistance {
    * @param array $pointA point A
    * @param array $pointB point B
    *
-   * @return array distance
+   * @return float distance
    */
   public static function calc(array $pointA, array $pointB): float {
     $distances = [];

@@ -32,7 +32,7 @@ abstract class AbstractDistance {
    * @param array $pointA point A
    * @param array $pointB point B
    *
-   * @return array distance
+   * @return float distance
    */
   abstract public static function calc(array $pointA, array $pointB): float;
 }
