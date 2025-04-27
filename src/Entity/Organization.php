@@ -24,6 +24,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Nelmio\ApiDocBundle\Attribute\Ignore as AttributeIgnore;
+use OpenApi\Attributes as OA;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\OrganizationRepository;
 
@@ -35,34 +38,45 @@ class Organization {
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
+  #[OA\Property(description: 'Organization ID', example: 1, readOnly: true)]
   private ?int $id = null; ///< organization id
 
   #[ORM\Column(length: 63)]
+  #[OA\Property(description: 'Organization name', example: 'Czech Softball Association')]
+  #[Assert\Length(min: 2, max: 63)]
   private ?string $name = null; ///< organization name
 
   #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+  #[OA\Property(description: 'Organization date of foundation', example: '01.01.2014', type: ['string', 'null'], format: 'DD.MM.YYYY')]
   private ?\DateTimeInterface $date = null; ///< organization date of foundation (optional)
 
   #[ORM\Column(length: 63, nullable: true)]
+  #[OA\Property(description: 'Organization city of foundation', example: 'Prague')]
+  #[Assert\Length(min: 2, max: 63)]
   private ?string $city = null; ///< organization city of foundation (optional)
 
   #[ORM\ManyToOne(inversedBy: 'organizations')]
   #[ORM\JoinColumn(nullable: false)]
+  #[OA\Property(description: 'Organization country of foundation ID', example: 4, type: 'integer', exclusiveMinimum: 0)]
   private ?Country $country = null; ///< organization country of foundation
 
   #[ORM\Column(length: 255, nullable: true)]
+  #[OA\Property(description: 'Organization details', example: null)]
+  #[Assert\Length(min: 2, max: 255)]
   private ?string $details = null; ///< organization details (optional)
 
   /**
    * @var Collection<int, Event>
    */
   #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'organization')]
+  #[AttributeIgnore]
   private Collection $events; ///< events with this organization
 
   /**
    * @var Collection<int, Pitcher>
    */
   #[ORM\OneToMany(targetEntity: Pitcher::class, mappedBy: 'organization')]
+  #[AttributeIgnore]
   private Collection $pitchers; ///< pitchers with this organization
 
   /**

@@ -21,6 +21,8 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +59,24 @@ final class OrganizationController extends AbstractController {
    *
    * @return JsonResponse organizations
    */
-  #[Route(['/', '/get'], methods: ['GET'])]
+  #[Route('/', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Organization > Get all',
+    description: 'Gets all organizations.',
+    tags: ['Organization']
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns all organizations.',
+    content: new OA\JsonContent(
+      type: 'array',
+      items: new OA\Items(ref: new Model(type: Organization::class))
+    )
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function organizationGet(): JsonResponse {
     $organizations = $this->entityManager->getRepository(Organization::class)->findAll();
 
@@ -80,10 +99,34 @@ final class OrganizationController extends AbstractController {
    *
    * @return JsonResponse organization
    */
-  #[Route(['/{id}', '/get/{id}'], methods: ['GET'])]
+  #[Route('/{id}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Organization > Get one',
+    description: 'Gets one organization by id.',
+    tags: ['Organization']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Organization ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns one organization.',
+    content: new Model(type: Organization::class)
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Organization not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function organizationGetId(int $id): JsonResponse {
     $organization = $this->entityManager->getRepository(Organization::class)->find($id);
-    if (!$organization) return new Response(null, 404);
+    if (!$organization) return new JsonResponse(null, 404);
 
     return new JsonResponse([
       'id' => $organization->getId(),
@@ -102,7 +145,30 @@ final class OrganizationController extends AbstractController {
    *
    * @return Response organization id
    */
-  #[Route(['/', '/add'], methods: ['POST'])]
+  #[Route('/', methods: ['POST'])]
+  #[OA\Post(
+    summary: 'Organization > Add new',
+    description: 'Adds new organization.',
+    tags: ['Organization']
+  )]
+  #[OA\RequestBody(
+    description: 'Organization data',
+    content: new Model(type: Organization::class),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns added organization ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 400,
+    description: 'Validation error.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function organizationAdd(Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -131,7 +197,40 @@ final class OrganizationController extends AbstractController {
    *
    * @return Response organization id
    */
-  #[Route(['/{id}', '/edit/{id}'], methods: ['PUT'])]
+  #[Route('/{id}', methods: ['PUT'])]
+  #[OA\Put(
+    summary: 'Organization > Edit one',
+    description: 'Edits one organization by id.',
+    tags: ['Organization']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Organization ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\RequestBody(
+    description: 'Organization data',
+    content: new Model(type: Organization::class),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns edited organization ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 400,
+    description: 'Validation error.'
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Organization not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function organizationEditId(int $id, Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -159,7 +258,25 @@ final class OrganizationController extends AbstractController {
    *
    * @return Response organization id
    */
-  #[Route(['/{id}', '/delete/{id}'], methods: ['DELETE'])]
+  #[Route('/{id}', methods: ['DELETE'])]
+  #[OA\Delete(
+    summary: 'Organization > Delete one',
+    description: 'Deletes one organization by id.',
+    tags: ['Organization']
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns deleted organization ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Organization not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function organizationDeleteId(int $id): Response {
     $organization = $this->entityManager->getRepository(Organization::class)->find($id);
     if (!$organization) return new Response(null, 404);
