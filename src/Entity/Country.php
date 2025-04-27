@@ -23,6 +23,9 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Nelmio\ApiDocBundle\Attribute\Ignore as AttributeIgnore;
+use OpenApi\Attributes as OA;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\CountryRepository;
 
@@ -34,30 +37,39 @@ class Country {
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
+  #[OA\Property(description: 'Country ID', example: 4, readOnly: true)]
   private ?int $id = null; ///< country id
 
   #[ORM\Column(length: 63)]
+  #[OA\Property(description: 'Country name', example: 'Czechia')]
+  #[Assert\Length(min: 2, max: 63)]
   private ?string $name = null; ///< country name
 
   #[ORM\Column(length: 3)]
+  #[OA\Property(description: 'Country 3-letter code', example: 'cze')]
+  #[Assert\Length(exactly: 3)]
+  #[Assert\Regex('/^[a-z]+$/')]
   private ?string $code = null; ///< country 3-letter code
 
   /**
    * @var Collection<int, Organization>
    */
   #[ORM\OneToMany(targetEntity: Organization::class, mappedBy: 'country')]
+  #[AttributeIgnore]
   private Collection $organizations; ///< organizations with this country
 
   /**
    * @var Collection<int, Event>
    */
   #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'country')]
+  #[AttributeIgnore]
   private Collection $events; ///< events with this country
 
   /**
    * @var Collection<int, Pitcher>
    */
   #[ORM\OneToMany(targetEntity: Pitcher::class, mappedBy: 'country')]
+  #[AttributeIgnore]
   private Collection $pitchers; ///< pitchers with this country
 
   /**

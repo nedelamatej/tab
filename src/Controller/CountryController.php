@@ -21,6 +21,8 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,7 +56,24 @@ final class CountryController extends AbstractController {
    *
    * @return JsonResponse countries
    */
-  #[Route(['/', '/get'], methods: ['GET'])]
+  #[Route('/', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Country > Get all',
+    description: 'Gets all countries.',
+    tags: ['Country']
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns all countries.',
+    content: new OA\JsonContent(
+      type: 'array',
+      items: new OA\Items(ref: new Model(type: Country::class))
+    )
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function countryGet(): JsonResponse {
     $countries = $this->entityManager->getRepository(Country::class)->findAll();
 
@@ -74,10 +93,34 @@ final class CountryController extends AbstractController {
    *
    * @return JsonResponse country
    */
-  #[Route(['/{id}', '/get/{id}'], methods: ['GET'])]
+  #[Route('/{id}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Country > Get one',
+    description: 'Gets one country by id.',
+    tags: ['Country']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Country ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns one country.',
+    content: new Model(type: Country::class)
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Country not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function countryGetId(int $id): JsonResponse {
     $country = $this->entityManager->getRepository(Country::class)->find($id);
-    if (!$country) return new Response(null, 404);
+    if (!$country) return new JsonResponse(null, 404);
 
     return new JsonResponse([
       'id' => $country->getId(),
@@ -93,7 +136,30 @@ final class CountryController extends AbstractController {
    *
    * @return Response country id
    */
-  #[Route(['/', '/add'], methods: ['POST'])]
+  #[Route('/', methods: ['POST'])]
+  #[OA\Post(
+    summary: 'Country > Add new',
+    description: 'Adds new country.',
+    tags: ['Country']
+  )]
+  #[OA\RequestBody(
+    description: 'Country data',
+    content: new Model(type: Country::class),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns added country ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 400,
+    description: 'Validation error.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function countryAdd(Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -119,7 +185,40 @@ final class CountryController extends AbstractController {
    *
    * @return Response country id
    */
-  #[Route(['/{id}', '/edit/{id}'], methods: ['PUT'])]
+  #[Route('/{id}', methods: ['PUT'])]
+  #[OA\Put(
+    summary: 'Country > Edit one',
+    description: 'Edits one country by id.',
+    tags: ['Country']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Country ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\RequestBody(
+    description: 'Country data',
+    content: new Model(type: Country::class),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns edited country ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 400,
+    description: 'Validation error.'
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Country not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function countryEditId(int $id, Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -145,6 +244,24 @@ final class CountryController extends AbstractController {
    * @return Response country id
    */
   #[Route(['/{id}', '/delete/{id}'], methods: ['DELETE'])]
+  #[OA\Delete(
+    summary: 'Country > Delete one',
+    description: 'Deletes one country by id.',
+    tags: ['Country']
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns deleted country ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Country not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function countryDeleteId(int $id): Response {
     $country = $this->entityManager->getRepository(Country::class)->find($id);
     if (!$country) return new Response(null, 404);
