@@ -24,6 +24,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Nelmio\ApiDocBundle\Attribute\Ignore as AttributeIgnore;
+use OpenApi\Attributes as OA;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\EventRepository;
 
@@ -35,32 +38,43 @@ class Event {
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
+  #[OA\Property(description: 'Event ID', example: 1, readOnly: true)]
   private ?int $id = null; ///< event id
 
   #[ORM\ManyToOne(inversedBy: 'events')]
   #[ORM\JoinColumn(nullable: false)]
+  #[OA\Property(description: 'Event organization ID', example: 1, type: 'integer', minimum: 1)]
   private ?Organization $organization = null; ///< event organization
 
   #[ORM\Column(length: 63)]
+  #[OA\Property(description: 'Event name', example: 'Men\'s ECh 2023, game #33')]
+  #[Assert\Length(min: 2, max: 63)]
   private ?string $name = null; ///< event name
 
   #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+  #[OA\Property(description: 'Event date of occurrence', example: '27.07.2023', type: ['string', 'null'], format: 'DD.MM.YYYY')]
   private ?\DateTimeInterface $date = null; ///< event date of occurrence (optional)
 
   #[ORM\Column(length: 63, nullable: true)]
+  #[OA\Property(description: 'Event city of occurrence', example: 'Hørsholm')]
+  #[Assert\Length(min: 2, max: 63)]
   private ?string $city = null; ///< event city of occurrence (optional)
 
   #[ORM\ManyToOne(inversedBy: 'events')]
   #[ORM\JoinColumn(nullable: false)]
+  #[OA\Property(description: 'Event country of occurence ID', example: 5, type: 'integer', minimum: 1)]
   private ?Country $country = null; ///< event country of occurrence
 
   #[ORM\Column(length: 255, nullable: true)]
+  #[OA\Property(description: 'Event details', example: null)]
+  #[Assert\Length(min: 2, max: 255)]
   private ?string $details = null; ///< event details (optional)
 
   /**
    * @var Collection<int, Pitch>
    */
   #[ORM\OneToMany(targetEntity: Pitch::class, mappedBy: 'event')]
+  #[AttributeIgnore]
   private Collection $pitches; ///< pitches with this event
 
   /**

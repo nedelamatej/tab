@@ -21,6 +21,8 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,7 +62,24 @@ final class EventController extends AbstractController {
    *
    * @return JsonResponse events
    */
-  #[Route(['/', '/get'], methods: ['GET'])]
+  #[Route('/', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Event > Get all',
+    description: 'Gets all events.',
+    tags: ['Event']
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns all events.',
+    content: new OA\JsonContent(
+      type: 'array',
+      items: new OA\Items(ref: new Model(type: Event::class))
+    )
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function eventGet(): JsonResponse {
     $events = $this->entityManager->getRepository(Event::class)->findAll();
 
@@ -84,10 +103,37 @@ final class EventController extends AbstractController {
    *
    * @return JsonResponse events
    */
-  #[Route(['/organization/{organizationId}', '/get/organization/{organizationId}'], methods: ['GET'])]
+  #[Route('/organization/{organizationId}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Event > Get all by organization',
+    description: 'Gets all events by organization.',
+    tags: ['Event']
+  )]
+  #[OA\PathParameter(
+    name: 'organizationId',
+    description: 'Organization ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns all events with given organization.',
+    content: new OA\JsonContent(
+      type: 'array',
+      items: new OA\Items(ref: new Model(type: Event::class))
+    )
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Organization not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function eventGetOrganizationId(int $organizationId): JsonResponse {
     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-    if (!$organization) return new Response(null, 404);
+    if (!$organization) return new JsonResponse(null, 404);
 
     $events = $organization->getEvents();
 
@@ -111,10 +157,37 @@ final class EventController extends AbstractController {
    *
    * @return JsonResponse events
    */
-  #[Route(['/pitcher/{pitcherId}', '/get/pitcher/{pitcherId}'], methods: ['GET'])]
+  #[Route('/pitcher/{pitcherId}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Event > Get all by pitcher',
+    description: 'Gets all events by pitcher.',
+    tags: ['Event']
+  )]
+  #[OA\PathParameter(
+    name: 'pitcherId',
+    description: 'Pitcher ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns all events with given pitcher.',
+    content: new OA\JsonContent(
+      type: 'array',
+      items: new OA\Items(ref: new Model(type: Event::class))
+    )
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Pitcher not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function eventGetPitcherId(int $pitcherId): JsonResponse {
     $pitcher = $this->entityManager->getRepository(Pitcher::class)->find($pitcherId);
-    if (!$pitcher) return new Response(null, 404);
+    if (!$pitcher) return new JsonResponse(null, 404);
 
     $pitches = $this->entityManager->getRepository(Pitch::class)->findBy(['pitcher' => $pitcher]);
 
@@ -142,10 +215,34 @@ final class EventController extends AbstractController {
    *
    * @return JsonResponse event
    */
-  #[Route(['/{id}', '/get/{id}'], methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Event > Get one',
+    description: 'Gets one event by id.',
+    tags: ['Event']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Event ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns one event.',
+    content: new Model(type: Event::class)
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Event not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
+  #[Route('/{id}', methods: ['GET'])]
   public function eventGetId(int $id): JsonResponse {
     $event = $this->entityManager->getRepository(Event::class)->find($id);
-    if (!$event) return new Response(null, 404);
+    if (!$event) return new JsonResponse(null, 404);
 
     return new JsonResponse([
       'id' => $event->getId(),
@@ -165,7 +262,30 @@ final class EventController extends AbstractController {
    *
    * @return Response event id
    */
-  #[Route(['/', '/add'], methods: ['POST'])]
+  #[Route('/', methods: ['POST'])]
+  #[OA\Post(
+    summary: 'Event > Add new',
+    description: 'Adds new event.',
+    tags: ['Event']
+  )]
+  #[OA\RequestBody(
+    description: 'Event data',
+    content: new Model(type: Event::class),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns added event ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 400,
+    description: 'Validation error.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function eventAdd(Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -195,7 +315,40 @@ final class EventController extends AbstractController {
    *
    * @return Response event id
    */
-  #[Route(['/{id}', '/edit/{id}'], methods: ['PUT'])]
+  #[Route('/{id}', methods: ['PUT'])]
+  #[OA\Put(
+    summary: 'Event > Edit one',
+    description: 'Edits one event by id.',
+    tags: ['Event']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Event ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\RequestBody(
+    description: 'Event data',
+    content: new Model(type: Event::class),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns edited event ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 400,
+    description: 'Validation error.'
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Event not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function eventEditId(int $id, Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -224,7 +377,25 @@ final class EventController extends AbstractController {
    *
    * @return Response event id
    */
-  #[Route(['/{id}', '/delete/{id}'], methods: ['DELETE'])]
+  #[Route('/{id}', methods: ['DELETE'])]
+  #[OA\Delete(
+    summary: 'Event > Delete one',
+    description: 'Deletes one event by id.',
+    tags: ['Event']
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns deleted event ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Event not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function eventDeleteId(int $id): Response {
     $event = $this->entityManager->getRepository(Event::class)->find($id);
     if (!$event) return new Response(null, 404);
