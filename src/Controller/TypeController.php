@@ -21,6 +21,8 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,7 +56,24 @@ final class TypeController extends AbstractController {
    *
    * @return JsonResponse types
    */
-  #[Route(['/', '/get'], methods: ['GET'])]
+  #[Route('/', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Type > Get all',
+    description: 'Gets all types.',
+    tags: ['Type']
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns all types.',
+    content: new OA\JsonContent(
+      type: 'array',
+      items: new OA\Items(ref: new Model(type: Type::class))
+    )
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function typeGet(): JsonResponse {
     $types = $this->entityManager->getRepository(Type::class)->findAll();
 
@@ -74,10 +93,34 @@ final class TypeController extends AbstractController {
    *
    * @return JsonResponse type
    */
-  #[Route(['/{id}', '/get/{id}'], methods: ['GET'])]
+  #[Route('/{id}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Type > Get one',
+    description: 'Gets one type by ID.',
+    tags: ['Type']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Type ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns one type.',
+    content: new Model(type: Type::class)
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Type not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function typeGetId(int $id): JsonResponse {
     $type = $this->entityManager->getRepository(Type::class)->find($id);
-    if (!$type) return new Response(null, 404);
+    if (!$type) return new JsonResponse(null, 404);
 
     return new JsonResponse([
       'id' => $type->getId(),
@@ -93,7 +136,7 @@ final class TypeController extends AbstractController {
    *
    * @return Response type id
    */
-  #[Route(['/', '/add'], methods: ['POST'])]
+  #[Route('/', methods: ['POST'])]
   public function typeAdd(Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -119,7 +162,7 @@ final class TypeController extends AbstractController {
    *
    * @return Response type id
    */
-  #[Route(['/{id}', '/edit/{id}'], methods: ['PUT'])]
+  #[Route('/{id}', methods: ['PUT'])]
   public function typeEditId(int $id, Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -144,7 +187,7 @@ final class TypeController extends AbstractController {
    *
    * @return Response type id
    */
-  #[Route(['/{id}', '/delete/{id}'], methods: ['DELETE'])]
+  #[Route('/{id}', methods: ['DELETE'])]
   public function typeDeleteId(int $id): Response {
     $type = $this->entityManager->getRepository(Type::class)->find($id);
     if (!$type) return new Response(null, 404);

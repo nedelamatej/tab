@@ -217,7 +217,7 @@ final class EventController extends AbstractController {
    */
   #[OA\Get(
     summary: 'Event > Get one',
-    description: 'Gets one event by id.',
+    description: 'Gets one event by ID.',
     tags: ['Event']
   )]
   #[OA\PathParameter(
@@ -318,7 +318,7 @@ final class EventController extends AbstractController {
   #[Route('/{id}', methods: ['PUT'])]
   #[OA\Put(
     summary: 'Event > Edit one',
-    description: 'Edits one event by id.',
+    description: 'Edits one event by ID.',
     tags: ['Event']
   )]
   #[OA\PathParameter(
@@ -380,7 +380,7 @@ final class EventController extends AbstractController {
   #[Route('/{id}', methods: ['DELETE'])]
   #[OA\Delete(
     summary: 'Event > Delete one',
-    description: 'Deletes one event by id.',
+    description: 'Deletes one event by ID.',
     tags: ['Event']
   )]
   #[OA\Response(

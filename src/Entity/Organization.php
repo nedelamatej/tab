@@ -57,7 +57,7 @@ class Organization {
 
   #[ORM\ManyToOne(inversedBy: 'organizations')]
   #[ORM\JoinColumn(nullable: false)]
-  #[OA\Property(description: 'Organization country of foundation ID', example: 4, type: 'integer', exclusiveMinimum: 0)]
+  #[OA\Property(description: 'Organization country of foundation ID', example: 4, type: 'integer', minimum: 1)]
   private ?Country $country = null; ///< organization country of foundation
 
   #[ORM\Column(length: 255, nullable: true)]

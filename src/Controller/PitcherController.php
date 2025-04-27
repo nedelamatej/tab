@@ -221,7 +221,7 @@ final class PitcherController extends AbstractController {
   #[Route('/{id}', methods: ['GET'])]
   #[OA\Get(
     summary: 'Pitcher > Get one',
-    description: 'Gets one pitcher by id.',
+    description: 'Gets one pitcher by ID.',
     tags: ['Pitcher']
   )]
   #[OA\PathParameter(
@@ -323,7 +323,7 @@ final class PitcherController extends AbstractController {
   #[Route('/{id}', methods: ['PUT'])]
   #[OA\Put(
     summary: 'Pitcher > Edit one',
-    description: 'Edits one pitcher by id.',
+    description: 'Edits one pitcher by ID.',
     tags: ['Pitcher']
   )]
   #[OA\PathParameter(
@@ -386,7 +386,7 @@ final class PitcherController extends AbstractController {
   #[Route('/{id}', methods: ['DELETE'])]
   #[OA\Delete(
     summary: 'Pitcher > Delete one',
-    description: 'Deletes one pitcher by id.',
+    description: 'Deletes one pitcher by ID.',
     tags: ['Pitcher']
   )]
   #[OA\Response(

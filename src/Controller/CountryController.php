@@ -96,7 +96,7 @@ final class CountryController extends AbstractController {
   #[Route('/{id}', methods: ['GET'])]
   #[OA\Get(
     summary: 'Country > Get one',
-    description: 'Gets one country by id.',
+    description: 'Gets one country by ID.',
     tags: ['Country']
   )]
   #[OA\PathParameter(
@@ -188,7 +188,7 @@ final class CountryController extends AbstractController {
   #[Route('/{id}', methods: ['PUT'])]
   #[OA\Put(
     summary: 'Country > Edit one',
-    description: 'Edits one country by id.',
+    description: 'Edits one country by ID.',
     tags: ['Country']
   )]
   #[OA\PathParameter(
@@ -243,10 +243,10 @@ final class CountryController extends AbstractController {
    *
    * @return Response country id
    */
-  #[Route(['/{id}', '/delete/{id}'], methods: ['DELETE'])]
+  #[Route('/{id}', methods: ['DELETE'])]
   #[OA\Delete(
     summary: 'Country > Delete one',
-    description: 'Deletes one country by id.',
+    description: 'Deletes one country by ID.',
     tags: ['Country']
   )]
   #[OA\Response(

@@ -102,7 +102,7 @@ final class OrganizationController extends AbstractController {
   #[Route('/{id}', methods: ['GET'])]
   #[OA\Get(
     summary: 'Organization > Get one',
-    description: 'Gets one organization by id.',
+    description: 'Gets one organization by ID.',
     tags: ['Organization']
   )]
   #[OA\PathParameter(
@@ -200,7 +200,7 @@ final class OrganizationController extends AbstractController {
   #[Route('/{id}', methods: ['PUT'])]
   #[OA\Put(
     summary: 'Organization > Edit one',
-    description: 'Edits one organization by id.',
+    description: 'Edits one organization by ID.',
     tags: ['Organization']
   )]
   #[OA\PathParameter(
@@ -261,7 +261,7 @@ final class OrganizationController extends AbstractController {
   #[Route('/{id}', methods: ['DELETE'])]
   #[OA\Delete(
     summary: 'Organization > Delete one',
-    description: 'Deletes one organization by id.',
+    description: 'Deletes one organization by ID.',
     tags: ['Organization']
   )]
   #[OA\Response(
