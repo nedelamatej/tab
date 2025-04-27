@@ -21,6 +21,8 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,7 +62,24 @@ final class PitcherController extends AbstractController {
    *
    * @return JsonResponse pitchers
    */
-  #[Route(['/', '/get'], methods: ['GET'])]
+  #[Route('/', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Pitcher > Get all',
+    description: 'Gets all pitchers.',
+    tags: ['Pitcher']
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns all pitchers.',
+    content: new OA\JsonContent(
+      type: 'array',
+      items: new OA\Items(ref: new Model(type: Pitcher::class))
+    )
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitcherGet(): JsonResponse {
     $pitchers = $this->entityManager->getRepository(Pitcher::class)->findAll();
 
@@ -85,10 +104,37 @@ final class PitcherController extends AbstractController {
    *
    * @return JsonResponse pitchers
    */
-  #[Route(['/organization/{organizationId}', '/get/organization/{organizationId}'], methods: ['GET'])]
+  #[Route('/organization/{organizationId}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Pitcher > Get all by organization',
+    description: 'Gets all pitchers by organization.',
+    tags: ['Pitcher']
+  )]
+  #[OA\PathParameter(
+    name: 'organizationId',
+    description: 'Organization ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns all pitchers with given organization.',
+    content: new OA\JsonContent(
+      type: 'array',
+      items: new OA\Items(ref: new Model(type: Pitcher::class))
+    )
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Organization not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitcherGetOrganizationId(int $organizationId): JsonResponse {
     $organization = $this->entityManager->getRepository(Organization::class)->find($organizationId);
-    if (!$organization) return new Response(null, 404);
+    if (!$organization) return new JsonResponse(null, 404);
 
     $pitchers = $organization->getPitchers();
 
@@ -113,10 +159,37 @@ final class PitcherController extends AbstractController {
    *
    * @return JsonResponse pitchers
    */
-  #[Route(['/event/{eventId}', '/get/event/{eventId}'], methods: ['GET'])]
+  #[Route('/event/{eventId}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Pitcher > Get all by event',
+    description: 'Gets all pitchers by event.',
+    tags: ['Pitcher']
+  )]
+  #[OA\PathParameter(
+    name: 'eventId',
+    description: 'Event ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns all pitchers with given event.',
+    content: new OA\JsonContent(
+      type: 'array',
+      items: new OA\Items(ref: new Model(type: Pitcher::class))
+    )
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Event not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitcherGetEventId(int $eventId): JsonResponse {
     $event = $this->entityManager->getRepository(Event::class)->find($eventId);
-    if (!$event) return new Response(null, 404);
+    if (!$event) return new JsonResponse(null, 404);
 
     $pitches = $this->entityManager->getRepository(Pitch::class)->findBy(['event' => $event]);
 
@@ -145,10 +218,34 @@ final class PitcherController extends AbstractController {
    *
    * @return JsonResponse pitcher
    */
-  #[Route(['/{id}', '/get/{id}'], methods: ['GET'])]
+  #[Route('/{id}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Pitcher > Get one',
+    description: 'Gets one pitcher by id.',
+    tags: ['Pitcher']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Pitcher ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns one pitcher.',
+    content: new Model(type: Pitcher::class)
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Pitcher not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitcherGetId(int $id): JsonResponse {
     $pitcher = $this->entityManager->getRepository(Pitcher::class)->find($id);
-    if (!$pitcher) return new Response(null, 404);
+    if (!$pitcher) return new JsonResponse(null, 404);
 
     return new JsonResponse([
       'id' => $pitcher->getId(),
@@ -169,7 +266,30 @@ final class PitcherController extends AbstractController {
    *
    * @return Response pitcher id
    */
-  #[Route(['/', '/add'], methods: ['POST'])]
+  #[Route('/', methods: ['POST'])]
+  #[OA\Post(
+    summary: 'Pitcher > Add new',
+    description: 'Adds new pitcher.',
+    tags: ['Pitcher']
+  )]
+  #[OA\RequestBody(
+    description: 'Pitcher data',
+    content: new Model(type: Pitcher::class),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns added pitcher ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 400,
+    description: 'Validation error.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitcherAdd(Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -200,7 +320,40 @@ final class PitcherController extends AbstractController {
    *
    * @return Response pitcher id
    */
-  #[Route(['/{id}', '/edit/{id}'], methods: ['PUT'])]
+  #[Route('/{id}', methods: ['PUT'])]
+  #[OA\Put(
+    summary: 'Pitcher > Edit one',
+    description: 'Edits one pitcher by id.',
+    tags: ['Pitcher']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Pitcher ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\RequestBody(
+    description: 'Pitcher data',
+    content: new Model(type: Pitcher::class),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns edited pitcher ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 400,
+    description: 'Validation error.'
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Pitcher not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitcherEditId(int $id, Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -230,7 +383,25 @@ final class PitcherController extends AbstractController {
    *
    * @return Response pitcher id
    */
-  #[Route(['/{id}', '/delete/{id}'], methods: ['DELETE'])]
+  #[Route('/{id}', methods: ['DELETE'])]
+  #[OA\Delete(
+    summary: 'Pitcher > Delete one',
+    description: 'Deletes one pitcher by id.',
+    tags: ['Pitcher']
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns deleted pitcher ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Pitcher not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitcherDeleteId(int $id): Response {
     $pitcher = $this->entityManager->getRepository(Pitcher::class)->find($id);
     if (!$pitcher) return new Response(null, 404);

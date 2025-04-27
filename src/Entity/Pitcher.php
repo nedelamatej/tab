@@ -24,6 +24,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Nelmio\ApiDocBundle\Attribute\Ignore as AttributeIgnore;
+use OpenApi\Attributes as OA;
+use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\PitcherRepository;
 
@@ -35,35 +38,48 @@ class Pitcher {
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
+  #[OA\Property(description: 'Pitcher ID', example: 1, readOnly: true)]
   private ?int $id = null; ///< pitcher id
 
   #[ORM\ManyToOne(inversedBy: 'pitchers')]
   #[ORM\JoinColumn(nullable: false)]
+  #[OA\Property(description: 'Pitcher organization ID', example: 1, type: 'integer', minimum: 1)]
   private ?Organization $organization = null; ///< pitcher organization
 
   #[ORM\Column(length: 31)]
+  #[OA\Property(description: 'Pitcher first name', example: 'Jonáš')]
+  #[Assert\Length(min: 2, max: 31)]
   private ?string $firstName = null; ///< pitcher first name
 
   #[ORM\Column(length: 31)]
+  #[OA\Property(description: 'Pitcher last name', example: 'Hajný')]
+  #[Assert\Length(min: 2, max: 31)]
   private ?string $lastName = null; ///< pitcher last name
 
   #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+  #[OA\Property(description: 'Pitcher date of birth', example: null, type: ['string', 'null'], format: 'DD.MM.YYYY')]
   private ?\DateTimeInterface $date = null; ///< pitcher date of birth (optional)
 
   #[ORM\Column(length: 63, nullable: true)]
+  #[OA\Property(description: 'Pitcher city of birth', example: null)]
+  #[Assert\Length(min: 2, max: 63)]
   private ?string $city = null; ///< pitcher city of birth (optional)
 
   #[ORM\ManyToOne(inversedBy: 'pitchers')]
   #[ORM\JoinColumn(nullable: false)]
+  #[OA\Property(description: 'Pitcher country of birth ID', example: 4, type: 'integer', minimum: 1)]
   private ?Country $country = null; ///< pitcher country of birth
 
   #[ORM\Column(length: 255, nullable: true)]
+  #[OA\Property(description: 'Pitcher details', example: null)]
+  #[Assert\Length(min: 2, max: 255)]
   private ?string $details = null; ///< pitcher details (optional)
 
   /**
    * @var Collection<int, Pitch>
    */
   #[ORM\OneToMany(targetEntity: Pitch::class, mappedBy: 'pitcher')]
+  #[AttributeIgnore]
   private Collection $pitches; ///< pitches with this pitcher
 
   /**
