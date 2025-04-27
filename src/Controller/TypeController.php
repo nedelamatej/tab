@@ -107,12 +107,12 @@ final class TypeController extends AbstractController {
   )]
   #[OA\Response(
     response: 200,
-    description: 'Returns one type.',
+    description: 'Returns one type with given ID.',
     content: new Model(type: Type::class)
   )]
   #[OA\Response(
     response: 404,
-    description: 'Type not found.'
+    description: 'Type with given ID not found.'
   )]
   #[OA\Response(
     response: 500,

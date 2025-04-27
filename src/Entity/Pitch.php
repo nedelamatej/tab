@@ -22,6 +22,8 @@ namespace App\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use OpenApi\Attributes as OA;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 use App\Repository\PitchRepository;
 
@@ -33,102 +35,168 @@ class Pitch {
   #[ORM\Id]
   #[ORM\GeneratedValue]
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch ID', example: 1, readOnly: true)]
+  #[Groups(['pitch:set'])]
   private ?int $id = null; ///< pitch id
 
   #[ORM\Column(type: Types::DATE_MUTABLE)]
+  #[OA\Property(description: 'Pitch date', example: '29.07.2023', type: 'string', format: 'DD.MM.YYYY')]
+  #[Groups(['pitch:set'])]
   private ?\DateTimeInterface $date = null; ///< pitch date
 
   #[ORM\Column(type: Types::TIME_MUTABLE)]
+  #[OA\Property(description: 'Pitch date', example: '16:56', type: 'string', format: 'HH:MM')]
+  #[Groups(['pitch:set'])]
   private ?\DateTimeInterface $time = null; ///< pitch time
 
   #[ORM\ManyToOne(inversedBy: 'pitches')]
+  #[OA\Property(description: 'Pitch event ID', example: 2, type: 'integer', minimum: 1)]
+  #[Groups(['pitch:set'])]
   private ?Event $event = null; ///< pitch event
 
   #[ORM\ManyToOne(inversedBy: 'pitches')]
-  private ?Pitcher $pitcher = null; ///< pitch pitccher
+  #[OA\Property(description: 'Pitch pitcher ID', example: 6, type: 'integer', minimum: 1)]
+  #[Groups(['pitch:set'])]
+  private ?Pitcher $pitcher = null; ///< pitch pitcher
 
   #[ORM\ManyToOne(inversedBy: 'pitches')]
+  #[OA\Property(description: 'Pitch type ID', example: null, type: ['integer', 'null'], minimum: 1, nullable: true)]
+  #[Groups(['pitch:doc'])]
   private ?Type $type = null; ///< pitch type
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch flight duration [s]', example: 0.318, type: 'number', format: 'float')]
+  #[Groups(['pitch:doc'])]
   private ?float $t = null; ///< pitch flight duration [s]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch rotation angle [rad]', example: 10.721, type: 'number', format: 'float')]
+  #[Groups(['pitch:doc'])]
   private ?float $alpha = null; ///< pitch rotation angle [rad]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch angular velocity [rad/s]', example: 135.396, type: 'number', format: 'float')]
+  #[Groups(['pitch:doc'])]
   private ?float $omega = null; ///< pitch angular velocity [rad/s]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch initial x coordinate [m]', example: 11.328, type: 'number', format: 'float')]
+  #[Groups(['pitch:set'])]
   private ?float $x_0 = null; ///< pitch initial x coordinate [m]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch initial y coordinate [m]', example: 0.599, type: 'number', format: 'float')]
+  #[Groups(['pitch:set'])]
   private ?float $y_0 = null; ///< pitch initial y coordinate [m]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch initial z coordinate [m]', example: -0.058, type: 'number', format: 'float')]
+  #[Groups(['pitch:set'])]
   private ?float $z_0 = null; ///< pitch initial z coordinate [m]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch initial translational velocity [m/s]', example: 36.018, type: 'number', format: 'float')]
+  #[Groups(['pitch:doc'])]
   private ?float $v_0 = null; ///< pitch initial translational velocity [m/s]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch initial horizontal angle [rad]', example: 1.539, type: 'number', format: 'float')]
+  #[Groups(['pitch:doc'])]
   private ?float $phi_0 = null; ///< pitch initial horizontal angle [rad]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch initial vertical angle [rad]', example: 3.027, type: 'number', format: 'float')]
+  #[Groups(['pitch:doc'])]
   private ?float $theta_0 = null; ///< pitch initial vertical angle [rad]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch final x coordinate [m]', example: 0.432, type: 'number', format: 'float')]
+  #[Groups(['pitch:set'])]
   private ?float $x_t = null; ///< pitch final x coordinate [m]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch final y coordinate [m]', example: 1.040, type: 'number', format: 'float')]
+  #[Groups(['pitch:set'])]
   private ?float $y_t = null; ///< pitch final y coordinate [m]
 
   #[ORM\Column]
+  #[OA\Property(description: 'Pitch final z coordinate [m]', example: 0.192, type: 'number', format: 'float')]
+  #[Groups(['pitch:set'])]
   private ?float $z_t = null; ///< pitch final z coordinate [m]
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch final translational velocity [m/s]', example: 32.827, type: ['number', 'null'], format: 'float', nullable: true)]
+  #[Groups(['pitch:doc'])]
   private ?float $v_t = null; ///< pitch final translational velocity [m/s] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch final horizontal angle [rad]', example: 1.556, type: ['number', 'null'], format: 'float', nullable: true)]
+  #[Groups(['pitch:doc'])]
   private ?float $phi_t = null; ///< pitch final horizontal angle [rad] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch final vertical angle [rad]', example: -0.037, type: ['number', 'null'], format: 'float', nullable: true)]
+  #[Groups(['pitch:doc'])]
   private ?float $theta_t = null; ///< pitch final vertical angle [rad] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch 1st control point x coordinate [m]', example: 7.537, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:set'])]
   private ?float $x_1 = null; ///< pitch 1st control point x coordinate [m] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch 1st control point y coordinate [m]', example: 1.036, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:set'])]
   private ?float $y_1 = null; ///< pitch 1st control point y coordinate [m] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch 1st control point z coordinate [m]', example: 0.063, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:set'])]
   private ?float $z_1 = null; ///< pitch 1st control point z coordinate [m] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch 2nd control point x coordinate [m]', example: 3.915, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:set'])]
   private ?float $x_2 = null; ///< pitch 2nd control point x coordinate [m] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch 2nd control point y coordinate [m]', example: 1.166, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:set'])]
   private ?float $y_2 = null; ///< pitch 2nd control point y coordinate [m] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch 2nd control point z coordinate [m]', example: 0.143, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:set'])]
   private ?float $z_2 = null; ///< pitch 2nd control point z coordinate [m] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch 3rd control point x coordinate [m]', example: 0.434, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:set'])]
   private ?float $x_3 = null; ///< pitch 3rd control point x coordinate [m] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch 3rd control point y coordinate [m]', example: 1.033, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:set'])]
   private ?float $y_3 = null; ///< pitch 3rd control point y coordinate [m] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch 3rd control point z coordinate [m]', example: 0.193, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:set'])]
   private ?float $z_3 = null; ///< pitch 3rd control point z coordinate [m] (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch drag coefficient', example: 0.330, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:doc'])]
   private ?float $c_d = null; ///< pitch drag coefficient (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch lift coefficient', example: 0.250, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:doc'])]
   private ?float $c_l = null; ///< pitch lift coefficient (optional)
 
   #[ORM\Column(nullable: true)]
+  #[OA\Property(description: 'Pitch computational deviation [m]', example: 0.007, type: ['number', 'null'], format: 'float', readOnly: true, nullable: true)]
+  #[Groups(['pitch:doc'])]
   private ?float $delta = null; ///< pitch computational deviation [m] (optional)
 
   /**

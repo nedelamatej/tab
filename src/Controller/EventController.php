@@ -125,7 +125,7 @@ final class EventController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Organization not found.'
+    description: 'Organization with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -179,7 +179,7 @@ final class EventController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Pitcher not found.'
+    description: 'Pitcher with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -228,12 +228,12 @@ final class EventController extends AbstractController {
   )]
   #[OA\Response(
     response: 200,
-    description: 'Returns one event.',
+    description: 'Returns one event with given ID.',
     content: new Model(type: Event::class)
   )]
   #[OA\Response(
     response: 404,
-    description: 'Event not found.'
+    description: 'Event with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -343,7 +343,7 @@ final class EventController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Event not found.'
+    description: 'Event with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -390,7 +390,7 @@ final class EventController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Event not found.'
+    description: 'Event with given ID not found.'
   )]
   #[OA\Response(
     response: 500,

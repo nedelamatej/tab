@@ -21,6 +21,8 @@
 namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Nelmio\ApiDocBundle\Attribute\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,34 +59,11 @@ final class PitchController extends AbstractController {
   }
 
   /**
-   * @brief Compares two pitches
-   *
-   * @param int $idA pitch A id
-   * @param int $idB pitch B id
-   *
-   * @return JsonResponse comparison result
-   */
-  #[Route('/comp/{idA}/{idB}', methods: ['GET'])]
-  public function pitchCompId(int $idA, int $idB): JsonResponse  {
-    $pitchA = $this->entityManager->getRepository(Pitch::class)->find($idA);
-    if (!$pitchA) return new Response(null, 404);
-
-    $pitchB = $this->entityManager->getRepository(Pitch::class)->find($idB);
-    if (!$pitchB) return new Response(null, 404);
-
-    return new JsonResponse([
-      'half' => PitchService::compHalf($pitchA, $pitchB),
-      'last' => PitchService::compLast($pitchA, $pitchB),
-      'diff' => PitchService::compDiff($pitchA, $pitchB),
-    ]);
-  }
-
-  /**
    * @brief Gets all pitches
    *
    * @return JsonResponse pitches
    */
-  #[Route(['/', '/get'], methods: ['GET'])]
+  #[Route('/', methods: ['GET'])]
   public function pitchGet(): JsonResponse {
     $pitches = $this->entityManager->getRepository(Pitch::class)->findAll();
 
@@ -96,32 +75,42 @@ final class PitchController extends AbstractController {
         'date' => $pitch->getDate()?->format('d.m.Y'),
         'time' => $pitch->getTime()?->format('H:i'),
         'event' => [
+          'id' => $pitch->getEvent()?->getId(),
+          'organization' => $pitch->getEvent()?->getOrganization()?->getId(),
           'name' => $pitch->getEvent()?->getName(),
-          'country' => $pitch->getEvent()?->getCountry()?->getCode(),
+          'date' => $pitch->getEvent()?->getDate()?->format('d.m.Y'),
+          'city' => $pitch->getEvent()?->getCity(),
+          'country' => $pitch->getEvent()?->getCountry()?->getId(),
+          'details' => $pitch->getEvent()?->getDetails(),
         ],
         'pitcher' => [
+          'id' => $pitch->getPitcher()?->getId(),
+          'organization' => $pitch->getPitcher()?->getOrganization()?->getId(),
           'firstName' => $pitch->getPitcher()?->getFirstName(),
           'lastName' => $pitch->getPitcher()?->getLastName(),
-          'country' => $pitch->getPitcher()?->getCountry()?->getCode(),
+          'date' => $pitch->getPitcher()?->getDate()?->format('d.m.Y'),
+          'city' => $pitch->getPitcher()?->getCity(),
+          'country' => $pitch->getPitcher()?->getCountry()?->getId(),
+          'details' => $pitch->getPitcher()?->getDetails(),
         ],
         'type' => $pitch->getType()?->getId(),
         't' => $pitch->getT(),
         'alpha' => $pitch->getAlpha(),
         'omega' => $pitch->getOmega(),
-        'xyz_0' => $pitch->getXyz_0(),
         'v_0' => $pitch->getV_0(),
         'phi_0' => $pitch->getPhi_0(),
         'theta_0' => $pitch->getTheta_0(),
-        'xyz_t' => $pitch->getXyz_t(),
         'v_t' => $pitch->getV_t(),
         'phi_t' => $pitch->getPhi_t(),
         'theta_t' => $pitch->getTheta_t(),
-        'xyz_1' => $pitch->getXyz_1(),
-        'xyz_2' => $pitch->getXyz_2(),
-        'xyz_3' => $pitch->getXyz_3(),
         'c_d' => $pitch->getC_d(),
         'c_l' => $pitch->getC_l(),
         'delta' => $pitch->getDelta(),
+        'xyz_0' => $pitch->getXyz_0(),
+        'xyz_t' => $pitch->getXyz_t(),
+        'xyz_1' => $pitch->getXyz_1(),
+        'xyz_2' => $pitch->getXyz_2(),
+        'xyz_3' => $pitch->getXyz_3(),
       ];
     }, $pitches));
   }
@@ -133,7 +122,55 @@ final class PitchController extends AbstractController {
    *
    * @return JsonResponse pitch
    */
-  #[Route(['/{id}', '/get/{id}'], methods: ['GET'])]
+  #[Route('/{id}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Pitch > Get one',
+    description: 'Gets one pitch by ID.',
+    tags: ['Pitch']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Pitch ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns one pitch with given ID.',
+    content: new OA\JsonContent(
+      allOf: [
+        new OA\Schema(
+          properties: [
+            new OA\Property(property: 'id', description: 'Pitch ID', example: 1, readOnly: true),
+            new OA\Property(property: 'idx', description: 'Pitch index', example: 1, type: 'integer'),
+            new OA\Property(property: 'cnt', description: 'Number of pitches (total)', example: 199, type: 'integer'),
+            new OA\Property(property: 'date', description: 'Pitch date', example: '29.07.2023', type: 'string', format: 'DD.MM.YYYY'),
+            new OA\Property(property: 'time', description: 'Pitch date', example: '16:56', type: 'string', format: 'HH:MM'),
+            new OA\Property(property: 'event', description: 'Pitch event', ref: new Model(type: Event::class)),
+            new OA\Property(property: 'pitcher', description: 'Pitch pitcher', ref: new Model(type: Pitcher::class))
+          ]
+        ),
+        new OA\Schema(ref: new Model(type: Pitch::class, groups: ['pitch:doc', 'pitch:get'])),
+        new OA\Schema(
+          properties: [
+            new OA\Property(property: 'xyz_0', description: 'Pitch initial x, y and z coordinate [m]', example: [11.328, 0.599, -0.058], type: 'array', items: new OA\Items(type: 'number', format: 'float')),
+            new OA\Property(property: 'xyz_t', description: 'Pitch final x, y and z coordinate [m]', example: [0.432, 1.040, 0.192], type: 'array', items: new OA\Items(type: 'number', format: 'float')),
+            new OA\Property(property: 'xyz_1', description: 'Pitch 1st control point x, y and z coordinate [m]', example: [7.537, 1.036, 0.063], type: 'array', items: new OA\Items(type: 'number', format: 'float')),
+            new OA\Property(property: 'xyz_2', description: 'Pitch 2nd control point x, y and z coordinate [m]', example: [3.915, 1.166, 0.143], type: 'array', items: new OA\Items(type: 'number', format: 'float')),
+            new OA\Property(property: 'xyz_3', description: 'Pitch 3rd control point x, y and z coordinate [m]', example: [0.434, 1.033, 0.193], type: 'array', items: new OA\Items(type: 'number', format: 'float'))
+          ]
+        )
+      ]
+    )
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Pitch with given ID not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitchGetId(int $id): JsonResponse {
     $pitch = $this->entityManager->getRepository(Pitch::class)->find($id);
     if (!$pitch) return new JsonResponse(null, 404);
@@ -145,37 +182,47 @@ final class PitchController extends AbstractController {
       'date' => $pitch->getDate()?->format('d.m.Y'),
       'time' => $pitch->getTime()?->format('H:i'),
       'event' => [
+        'id' => $pitch->getEvent()?->getId(),
+        'organization' => $pitch->getEvent()?->getOrganization()?->getId(),
         'name' => $pitch->getEvent()?->getName(),
-        'country' => $pitch->getEvent()?->getCountry()?->getCode(),
+        'date' => $pitch->getEvent()?->getDate()?->format('d.m.Y'),
+        'city' => $pitch->getEvent()?->getCity(),
+        'country' => $pitch->getEvent()?->getCountry()?->getId(),
+        'details' => $pitch->getEvent()?->getDetails(),
       ],
       'pitcher' => [
+        'id' => $pitch->getPitcher()?->getId(),
+        'organization' => $pitch->getPitcher()?->getOrganization()?->getId(),
         'firstName' => $pitch->getPitcher()?->getFirstName(),
         'lastName' => $pitch->getPitcher()?->getLastName(),
-        'country' => $pitch->getPitcher()?->getCountry()?->getCode(),
+        'date' => $pitch->getPitcher()?->getDate()?->format('d.m.Y'),
+        'city' => $pitch->getPitcher()?->getCity(),
+        'country' => $pitch->getPitcher()?->getCountry()?->getId(),
+        'details' => $pitch->getPitcher()?->getDetails(),
       ],
-    'type' => $pitch->getType()?->getId(),
+      'type' => $pitch->getType()?->getId(),
       't' => $pitch->getT(),
       'alpha' => $pitch->getAlpha(),
       'omega' => $pitch->getOmega(),
-      'xyz_0' => $pitch->getXyz_0(),
       'v_0' => $pitch->getV_0(),
       'phi_0' => $pitch->getPhi_0(),
       'theta_0' => $pitch->getTheta_0(),
-      'xyz_t' => $pitch->getXyz_t(),
       'v_t' => $pitch->getV_t(),
       'phi_t' => $pitch->getPhi_t(),
       'theta_t' => $pitch->getTheta_t(),
-      'xyz_1' => $pitch->getXyz_1(),
-      'xyz_2' => $pitch->getXyz_2(),
-      'xyz_3' => $pitch->getXyz_3(),
       'c_d' => $pitch->getC_d(),
       'c_l' => $pitch->getC_l(),
       'delta' => $pitch->getDelta(),
+      'xyz_0' => $pitch->getXyz_0(),
+      'xyz_t' => $pitch->getXyz_t(),
+      'xyz_1' => $pitch->getXyz_1(),
+      'xyz_2' => $pitch->getXyz_2(),
+      'xyz_3' => $pitch->getXyz_3(),
     ]);
   }
 
   /**
-   * @brief Gets one pitch by idx
+   * @brief Gets one pitch by event, pitcher and index
    *
    * @param int $eventId event id
    * @param int $pitcherId pitcher id
@@ -183,7 +230,67 @@ final class PitchController extends AbstractController {
    *
    * @return JsonResponse pitch
    */
-  #[Route(['/{eventId}/{pitcherId}/{idx}', '/get/{eventId}/{pitcherId}/{idx}'], methods: ['GET'])]
+  #[Route('/{eventId}/{pitcherId}/{idx}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Pitch > Get one by event, pitcher',
+    description: 'Gets one pitch by event, pitcher and index.',
+    tags: ['Pitch']
+  )]
+  #[OA\PathParameter(
+    name: 'eventId',
+    description: 'Event ID (0 for all)',
+    schema: new OA\Schema(type: 'integer', minimum: 0),
+    required: true
+  )]
+  #[OA\PathParameter(
+    name: 'pitcherId',
+    description: 'Pitcher ID (0 for all)',
+    schema: new OA\Schema(type: 'integer', minimum: 0),
+    required: true
+  )]
+  #[OA\PathParameter(
+    name: 'idx',
+    description: 'Pitch index (1 for first)',
+    schema: new OA\Schema(type: 'integer', minimum: 1),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns one pitch with given event, pitcher and index.',
+    content: new OA\JsonContent(
+      allOf: [
+        new OA\Schema(
+          properties: [
+            new OA\Property(property: 'id', description: 'Pitch ID', example: 1, readOnly: true),
+            new OA\Property(property: 'idx', description: 'Pitch index', example: 1, type: 'integer'),
+            new OA\Property(property: 'cnt', description: 'Number of pitches (with given event and pitcher)', example: 199, type: 'integer'),
+            new OA\Property(property: 'date', description: 'Pitch date', example: '29.07.2023', type: 'string', format: 'DD.MM.YYYY'),
+            new OA\Property(property: 'time', description: 'Pitch date', example: '16:56', type: 'string', format: 'HH:MM'),
+            new OA\Property(property: 'event', description: 'Pitch event', ref: new Model(type: Event::class)),
+            new OA\Property(property: 'pitcher', description: 'Pitch pitcher', ref: new Model(type: Pitcher::class))
+          ]
+        ),
+        new OA\Schema(ref: new Model(type: Pitch::class, groups: ['pitch:doc', 'pitch:get'])),
+        new OA\Schema(
+          properties: [
+            new OA\Property(property: 'xyz_0', description: 'Pitch initial x, y and z coordinate [m]', example: [11.328, 0.599, -0.058], type: 'array', items: new OA\Items(type: 'number', format: 'float')),
+            new OA\Property(property: 'xyz_t', description: 'Pitch final x, y and z coordinate [m]', example: [0.432, 1.040, 0.192], type: 'array', items: new OA\Items(type: 'number', format: 'float')),
+            new OA\Property(property: 'xyz_1', description: 'Pitch 1st control point x, y and z coordinate [m]', example: [7.537, 1.036, 0.063], type: 'array', items: new OA\Items(type: 'number', format: 'float')),
+            new OA\Property(property: 'xyz_2', description: 'Pitch 2nd control point x, y and z coordinate [m]', example: [3.915, 1.166, 0.143], type: 'array', items: new OA\Items(type: 'number', format: 'float')),
+            new OA\Property(property: 'xyz_3', description: 'Pitch 3rd control point x, y and z coordinate [m]', example: [0.434, 1.033, 0.193], type: 'array', items: new OA\Items(type: 'number', format: 'float'))
+          ]
+        )
+      ]
+    )
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Event, pitcher or pitch not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitchGetIdx(int $eventId, int $pitcherId, int $idx): JsonResponse {
     $criteria = [];
 
@@ -210,32 +317,42 @@ final class PitchController extends AbstractController {
       'date' => $pitch->getDate()?->format('d.m.Y'),
       'time' => $pitch->getTime()?->format('H:i'),
       'event' => [
+        'id' => $pitch->getEvent()?->getId(),
+        'organization' => $pitch->getEvent()?->getOrganization()?->getId(),
         'name' => $pitch->getEvent()?->getName(),
-        'country' => $pitch->getEvent()?->getCountry()?->getCode(),
+        'date' => $pitch->getEvent()?->getDate()?->format('d.m.Y'),
+        'city' => $pitch->getEvent()?->getCity(),
+        'country' => $pitch->getEvent()?->getCountry()?->getId(),
+        'details' => $pitch->getEvent()?->getDetails(),
       ],
       'pitcher' => [
+        'id' => $pitch->getPitcher()?->getId(),
+        'organization' => $pitch->getPitcher()?->getOrganization()?->getId(),
         'firstName' => $pitch->getPitcher()?->getFirstName(),
         'lastName' => $pitch->getPitcher()?->getLastName(),
-        'country' => $pitch->getPitcher()?->getCountry()?->getCode(),
+        'date' => $pitch->getPitcher()?->getDate()?->format('d.m.Y'),
+        'city' => $pitch->getPitcher()?->getCity(),
+        'country' => $pitch->getPitcher()?->getCountry()?->getId(),
+        'details' => $pitch->getPitcher()?->getDetails(),
       ],
       'type' => $pitch->getType()?->getId(),
       't' => $pitch->getT(),
       'alpha' => $pitch->getAlpha(),
       'omega' => $pitch->getOmega(),
-      'xyz_0' => $pitch->getXyz_0(),
       'v_0' => $pitch->getV_0(),
       'phi_0' => $pitch->getPhi_0(),
       'theta_0' => $pitch->getTheta_0(),
-      'xyz_t' => $pitch->getXyz_t(),
       'v_t' => $pitch->getV_t(),
       'phi_t' => $pitch->getPhi_t(),
       'theta_t' => $pitch->getTheta_t(),
-      'xyz_1' => $pitch->getXyz_1(),
-      'xyz_2' => $pitch->getXyz_2(),
-      'xyz_3' => $pitch->getXyz_3(),
       'c_d' => $pitch->getC_d(),
       'c_l' => $pitch->getC_l(),
       'delta' => $pitch->getDelta(),
+      'xyz_0' => $pitch->getXyz_0(),
+      'xyz_t' => $pitch->getXyz_t(),
+      'xyz_1' => $pitch->getXyz_1(),
+      'xyz_2' => $pitch->getXyz_2(),
+      'xyz_3' => $pitch->getXyz_3(),
     ]);
   }
 
@@ -246,7 +363,30 @@ final class PitchController extends AbstractController {
    *
    * @return Response pitch id
    */
-  #[Route(['/', '/add'], methods: ['POST'])]
+  #[Route('/', methods: ['POST'])]
+  #[OA\Post(
+    summary: 'Pitch > Add new',
+    description: 'Adds new pitch.',
+    tags: ['Pitch']
+  )]
+  #[OA\RequestBody(
+    description: 'Pitch data',
+    content: new Model(type: Pitch::class, groups: ['pitch:doc', 'pitch:set']),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns added pitch ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 400,
+    description: 'Validation error.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitchAdd(Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -292,7 +432,40 @@ final class PitchController extends AbstractController {
    *
    * @return Response pitch id
    */
-  #[Route(['/{id}', '/edit/{id}'], methods: ['PUT'])]
+  #[Route('/{id}', methods: ['PUT'])]
+  #[OA\Put(
+    summary: 'Pitch > Edit one',
+    description: 'Edits one pitch by ID.',
+    tags: ['Pitch']
+  )]
+  #[OA\PathParameter(
+    name: 'id',
+    description: 'Pitch ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\RequestBody(
+    description: 'Pitch data',
+    content: new Model(type: Pitch::class, groups: ['pitch:doc', 'pitch:set']),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns edited pitch ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 400,
+    description: 'Validation error.'
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Pitch with given ID not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitchEditId(int $id, Request $request): Response {
     $data = json_decode($request->getContent());
 
@@ -342,7 +515,25 @@ final class PitchController extends AbstractController {
    *
    * @return Response pitch id
    */
-  #[Route(['/{id}', '/delete/{id}'], methods: ['DELETE'])]
+  #[Route('/{id}', methods: ['DELETE'])]
+  #[OA\Delete(
+    summary: 'Pitch > Delete one',
+    description: 'Deletes one pitch by ID.',
+    tags: ['Pitch']
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns deleted pitch ID.',
+    content: new OA\JsonContent(type: 'integer', exclusiveMinimum: 0)
+  )]
+  #[OA\Response(
+    response: 404,
+    description: 'Pitch with given ID not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
   public function pitchDeleteId(int $id): Response {
     $pitch = $this->entityManager->getRepository(Pitch::class)->find($id);
     if (!$pitch) return new Response(null, 404);
@@ -351,5 +542,68 @@ final class PitchController extends AbstractController {
     $this->entityManager->flush();
 
     return new Response($pitch->getId());
+  }
+
+  /**
+   * @brief Compares two pitches
+   *
+   * @param int $idA pitch A id
+   * @param int $idB pitch B id
+   *
+   * @return JsonResponse comparison result
+   */
+  #[Route('/{idA}/{idB}', methods: ['GET'])]
+  #[OA\Get(
+    summary: 'Pitch > Compare two',
+    description: 'Compares two pitches.',
+    tags: ['Pitch']
+  )]
+  #[OA\PathParameter(
+    name: 'idA',
+    description: '1st pitch ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\PathParameter(
+    name: 'idB',
+    description: '2nd pitch ID',
+    schema: new OA\Schema(type: 'integer', exclusiveMinimum: 0),
+    required: true
+  )]
+  #[OA\Response(
+    response: 200,
+    description: 'Returns comparasion result.',
+    content: new OA\JsonContent(
+      allOf: [
+        new OA\Schema(
+          properties: [
+            new OA\Property(property: 'half', description: 'First half pitch tunneling percentage', example: 0.793, type: 'number', format: 'float'),
+            new OA\Property(property: 'last', description: 'Last point pitch tunneling percentage', example: 0.988, type: 'number', format: 'float'),
+            new OA\Property(property: 'diff', description: 'First points difference [m]', example: 0.133, type: 'number', format: 'float')
+          ]
+        )
+      ]
+    )
+  )]
+  #[OA\Response(
+    response: 404,
+    description: '1st pitch or 2nd pitch not found.'
+  )]
+  #[OA\Response(
+    response: 500,
+    description: 'Server error.'
+  )]
+  public function pitchCompId(int $idA, int $idB): JsonResponse  {
+    $pitchA = $this->entityManager->getRepository(Pitch::class)->find($idA);
+    if (!$pitchA) return new Response(null, 404);
+
+    $pitchB = $this->entityManager->getRepository(Pitch::class)->find($idB);
+    if (!$pitchB) return new Response(null, 404);
+
+    return new JsonResponse([
+      'half' => PitchService::compHalf($pitchA, $pitchB),
+      'last' => PitchService::compLast($pitchA, $pitchB),
+      'diff' => PitchService::compDiff($pitchA, $pitchB),
+    ]);
   }
 }

@@ -126,7 +126,7 @@ final class PitcherController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Organization not found.'
+    description: 'Organization with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -181,7 +181,7 @@ final class PitcherController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Event not found.'
+    description: 'Event with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -232,12 +232,12 @@ final class PitcherController extends AbstractController {
   )]
   #[OA\Response(
     response: 200,
-    description: 'Returns one pitcher.',
+    description: 'Returns one pitcher with given ID.',
     content: new Model(type: Pitcher::class)
   )]
   #[OA\Response(
     response: 404,
-    description: 'Pitcher not found.'
+    description: 'Pitcher with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -348,7 +348,7 @@ final class PitcherController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Pitcher not found.'
+    description: 'Pitcher with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -396,7 +396,7 @@ final class PitcherController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Pitcher not found.'
+    description: 'Pitcher with given ID not found.'
   )]
   #[OA\Response(
     response: 500,

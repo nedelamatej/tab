@@ -8,9 +8,8 @@ nelmio_api_doc:
       - url: https://tranim.nede.cz/api
   html_config:
     stoplight_config:
-      apiDescriptionUrl: https://tranim.nede.cz/api
-      hideTryIt: true
+      layout: responsive
       router: hash
   areas:
-    path_patterns:
-      - ^/(?!_error|_profiler|_wdt|type)
+    default:
+      disable_default_routes: true

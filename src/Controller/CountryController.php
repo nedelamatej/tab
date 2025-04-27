@@ -107,12 +107,12 @@ final class CountryController extends AbstractController {
   )]
   #[OA\Response(
     response: 200,
-    description: 'Returns one country.',
+    description: 'Returns one country with given ID.',
     content: new Model(type: Country::class)
   )]
   #[OA\Response(
     response: 404,
-    description: 'Country not found.'
+    description: 'Country with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -213,7 +213,7 @@ final class CountryController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Country not found.'
+    description: 'Country with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -256,7 +256,7 @@ final class CountryController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Country not found.'
+    description: 'Country with given ID not found.'
   )]
   #[OA\Response(
     response: 500,

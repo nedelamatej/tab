@@ -113,12 +113,12 @@ final class OrganizationController extends AbstractController {
   )]
   #[OA\Response(
     response: 200,
-    description: 'Returns one organization.',
+    description: 'Returns one organization with given ID.',
     content: new Model(type: Organization::class)
   )]
   #[OA\Response(
     response: 404,
-    description: 'Organization not found.'
+    description: 'Organization with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -225,7 +225,7 @@ final class OrganizationController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Organization not found.'
+    description: 'Organization with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
@@ -271,7 +271,7 @@ final class OrganizationController extends AbstractController {
   )]
   #[OA\Response(
     response: 404,
-    description: 'Organization not found.'
+    description: 'Organization with given ID not found.'
   )]
   #[OA\Response(
     response: 500,
