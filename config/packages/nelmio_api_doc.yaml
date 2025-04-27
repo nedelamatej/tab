@@ -1,7 +1,7 @@
 nelmio_api_doc:
   documentation:
     info:
-      title: Trajectory Animation Backend (TAB)
+      title: Tranim App Backend (TAB)
       description: Backend documentation for softball pitch trajectories modeling and analysis application.
       version: 0.3.0
     servers:
