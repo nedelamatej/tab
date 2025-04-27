@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2025-04-28
+
+### Added
+
+- Setup `OpenAPI` documentation tool.
+- Added `comp` endpoint to `Pitch` controller.
+- Added `PitchService` class.
+- Added `DeCasteljausAlgorithm` class.
+
 ## [0.2.0] - 2025-04-14
 
 ### BREAKING CHANGES
