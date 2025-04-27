@@ -1,0 +1,16 @@
+nelmio_api_doc:
+  documentation:
+    info:
+      title: Trajectory Animation Backend (TAB)
+      description: Backend documentation for softball pitch trajectories modeling and analysis application.
+      version: 0.3.0
+    servers:
+      - url: https://tranim.nede.cz/api
+  html_config:
+    stoplight_config:
+      apiDescriptionUrl: https://tranim.nede.cz/api
+      hideTryIt: true
+      router: hash
+  areas:
+    path_patterns:
+      - ^/(?!_error|_profiler|_wdt|type)
