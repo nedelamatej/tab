@@ -29,7 +29,7 @@ use App\Service\BernsteinPolynomial;
 use App\Service\DeCasteljausAlgorithm;
 use App\Service\DifferentialEquations\SoftballEquations;
 use App\Service\DistanceMetric\EuclideanDistance;
-use App\Service\NeighborhoodSearch\MooreNeighborhood;
+use App\Service\NeighborhoodSearch\VonNeumannNeighborhood;
 use App\Service\NumericalMethod\RungeKutta4Method;
 
 /**
@@ -44,22 +44,22 @@ final class PitchService {
    * @return void
    */
   public static function calc(Pitch $pitch): void {
-    $mooreNeighborhood = new MooreNeighborhood(0.2, 0.0, 0.5, 1.0);
-    $rungeKutta4Method = new RungeKutta4Method(99, $pitch->getT());
+    $neighborhoodSearch = new VonNeumannNeighborhood(0.2, 0.0, 0.5, 1.0);
+    $numericalMethod = new RungeKutta4Method(99, $pitch->getT());
 
     $state = [...$pitch->getXyz_0(), ...$pitch->getV_xyz_0()];
 
-    [$c_d, $c_l] = $mooreNeighborhood->approx(function ($c_d, $c_l) use ($pitch, $state, $rungeKutta4Method) {
-      $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
+    [$c_d, $c_l] = $neighborhoodSearch->approx(function ($c_d, $c_l) use ($pitch, $state, $numericalMethod) {
+      $differentialEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
 
-      $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
+      $solution = $numericalMethod->solve($state, [$differentialEquations, 'deriv']);
 
       return EuclideanDistance::calc($pitch->getXyz_t(), end($solution));
     });
 
-    $softballEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
+    $differentialEquations = new SoftballEquations($c_d, $c_l, $pitch->getAlpha());
 
-    $solution = $rungeKutta4Method->solve($state, [$softballEquations, 'deriv']);
+    $solution = $numericalMethod->solve($state, [$differentialEquations, 'deriv']);
 
     $pitch->setC_d($c_d);
     $pitch->setC_l($c_l);
