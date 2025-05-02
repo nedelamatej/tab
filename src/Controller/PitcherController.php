@@ -193,9 +193,9 @@ final class PitcherController extends AbstractController {
 
     $pitches = $this->entityManager->getRepository(Pitch::class)->findBy(['event' => $event]);
 
-    $pitchers = array_unique(array_map(function ($pitch) {
+    $pitchers = array_values(array_unique(array_map(function ($pitch) {
       return $pitch->getPitcher();
-    }, $pitches), SORT_REGULAR);
+    }, $pitches), SORT_REGULAR));
 
     return new JsonResponse(array_map(function ($pitcher) {
       return [

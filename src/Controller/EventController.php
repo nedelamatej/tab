@@ -191,9 +191,9 @@ final class EventController extends AbstractController {
 
     $pitches = $this->entityManager->getRepository(Pitch::class)->findBy(['pitcher' => $pitcher]);
 
-    $events = array_unique(array_map(function ($pitch) {
+    $events = array_values(array_unique(array_map(function ($pitch) {
       return $pitch->getEvent();
-    }, $pitches), SORT_REGULAR);
+    }, $pitches), SORT_REGULAR));
 
     return new JsonResponse(array_map(function ($event) {
       return [
