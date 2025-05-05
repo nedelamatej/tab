@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2025-05-05
+
+### Fixed
+
+- Fixed array indexing in `Pitch` controller.
+
+### Changed
+
+- Changed used neighborhood in `Pitch` service.
+
 ## [0.3.0] - 2025-04-28
 
 ### Added

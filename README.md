@@ -1,9 +1,12 @@
 # Tranim App Backend (TAB)
 
+[![Screenshot][screenshot]](https://tranim.cz)
+
 ## About The Project
 
 Backend part of softball pitch trajectories modeling and analysis application.
 
+- Application URL: [tranim.cz](https://tranim.cz)
 - Backend URL: [tranim.nede.cz/api](https://tranim.nede.cz/api)
 - Backend API Documentation: [tranim.nede.cz/api/doc](https://tranim.nede.cz/api/doc)
 - Backend Doxygen Documentation: [tranim.nede.cz/be/doc](https://tranim.nede.cz/be/doc)
@@ -43,22 +46,20 @@ tab
 │   │   ├── PitchController.php
 │   │   └── ...
 │   ├── Entity                        # Doctrine entities
-│   │   ├── PitchEntity.php
+│   │   ├── Pitch.php
 │   │   └── ...
 │   ├── Repository                    # Doctrine repositories
 │   │   ├── PitchRepository.php
 │   │   └── ...
-│   └── Service                       # Symfony services
-│       ├── DifferentialEquations     # differential equations classes
-│       ├── DistanceMetric            # distance metric classes
-│       ├── NeighborhoodSearch        # neighborhood search classes
-│       ├── NumericalMethod           # numerical method classes
-│       ├── BernsteinPolynomial.php   # Bernstein polynomial class
-│       ├── DeCasteljausAlgorithm.php # de Casteljau's algorithm class
-│       └── PitchService.php          # pitch service class
-├── var
-│   ├── cache                         # Symfony cache
-│   └── log                           # Symfony logs
+│   ├── Service                       # Symfony services
+│   │   ├── DifferentialEquations     # differential equations classes
+│   │   ├── DistanceMetric            # distance metric classes
+│   │   ├── NeighborhoodSearch        # neighborhood search classes
+│   │   ├── NumericalMethod           # numerical method classes
+│   │   ├── BernsteinPolynomial.php   # Bernstein polynomial class
+│   │   ├── DeCasteljausAlgorithm.php # de Casteljau's algorithm class
+│   │   └── PitchService.php          # pitch service class
+│   └── ...
 ├── vendor                            # Composer dependencies
 ├── .env                              # environment variables
 ├── CHANGELOG.md                      # changelog
@@ -66,7 +67,8 @@ tab
 ├── dbDown.sql                        # database teardown script
 ├── dbUp.sql                          # database setup script
 ├── LICENSE.md                        # license
-└── README.md                         # this file
+├── README.md                         # this file
+└── ...
 ```
 
 ## Makefile Targets
@@ -83,7 +85,8 @@ make doc                              # generate Doxygen documentation
 [![PHP][php]][php-url]\
 [![Doctrine][doctrine]][doctrine-url]\
 [![MySQL][mysql]][mysql-url]\
-[![Doxygen][doxygen]][doxygen-url]
+[![Doxygen][doxygen]][doxygen-url]\
+[![Composer][composer]][composer-url]
 
 ## Conventions
 
@@ -111,6 +114,7 @@ This project is part of a bachelor's thesis:
 [![Email][email]][email-url]\
 [![GitHub][github]][github-url]
 
+[screenshot]: screenshot.png
 [symfony]: https://img.shields.io/badge/symfony-000000?style=for-the-badge&logo=symfony&logoColor=white
 [symfony-url]: https://symfony.org/
 [php]: https://img.shields.io/badge/php-777BB4?style=for-the-badge&logo=php&logoColor=white
@@ -121,7 +125,8 @@ This project is part of a bachelor's thesis:
 [mysql-url]: https://mysql.com/
 [doxygen]: https://img.shields.io/badge/doxygen-2C4AA8?style=for-the-badge&logo=doxygen&logoColor=white
 [doxygen-url]: https://www.doxygen.nl/
-
+[composer]: https://img.shields.io/badge/composer-885630?style=for-the-badge&logo=composer&logoColor=white
+[composer-url]: https://getcomposer.org/
 [name]: https://img.shields.io/badge/Matěj_Neděla-241F31?style=for-the-badge&logo=gnometerminal&logoColor=white
 [name-url]: https://nede.cz/
 [email]: https://img.shields.io/badge/nedela@nede.cz-EA4335?style=for-the-badge&logo=gmail&logoColor=white
