@@ -73,7 +73,16 @@ final class EventController extends AbstractController {
     description: 'Returns all events.',
     content: new OA\JsonContent(
       type: 'array',
-      items: new OA\Items(ref: new Model(type: Event::class))
+      items: new OA\Items(
+        allOf: [
+          new OA\Schema(ref: new Model(type: Event::class)),
+          new OA\Schema(
+            properties: [
+              new OA\Property(property: 'pitchCnt', description: 'Number of pitches in this event', example: 199, type: 'integer'),
+            ]
+          )
+        ]
+      )
     )
   )]
   #[OA\Response(
@@ -92,6 +101,7 @@ final class EventController extends AbstractController {
         'city' => $event->getCity(),
         'country' => $event->getCountry()?->getId(),
         'details' => $event->getDetails(),
+        'pitchCnt' => count($event->getPitches()),
       ];
     }, $events));
   }
@@ -120,7 +130,16 @@ final class EventController extends AbstractController {
     description: 'Returns all events with given organization.',
     content: new OA\JsonContent(
       type: 'array',
-      items: new OA\Items(ref: new Model(type: Event::class))
+      items: new OA\Items(
+        allOf: [
+          new OA\Schema(ref: new Model(type: Event::class)),
+          new OA\Schema(
+            properties: [
+              new OA\Property(property: 'pitchCnt', description: 'Number of pitches in this event', example: 199, type: 'integer'),
+            ]
+          )
+        ]
+      )
     )
   )]
   #[OA\Response(
@@ -146,6 +165,7 @@ final class EventController extends AbstractController {
         'city' => $event->getCity(),
         'country' => $event->getCountry()?->getId(),
         'details' => $event->getDetails(),
+        'pitchCnt' => count($event->getPitches()),
       ];
     }, $events->toArray()));
   }
@@ -174,7 +194,16 @@ final class EventController extends AbstractController {
     description: 'Returns all events with given pitcher.',
     content: new OA\JsonContent(
       type: 'array',
-      items: new OA\Items(ref: new Model(type: Event::class))
+      items: new OA\Items(
+        allOf: [
+          new OA\Schema(ref: new Model(type: Event::class)),
+          new OA\Schema(
+            properties: [
+              new OA\Property(property: 'pitchCnt', description: 'Number of pitches in this event', example: 199, type: 'integer'),
+            ]
+          )
+        ]
+      )
     )
   )]
   #[OA\Response(
@@ -204,6 +233,7 @@ final class EventController extends AbstractController {
         'city' => $event->getCity(),
         'country' => $event->getCountry()?->getId(),
         'details' => $event->getDetails(),
+        'pitchCnt' => count($event->getPitches()),
       ];
     }, $events));
   }
@@ -229,7 +259,16 @@ final class EventController extends AbstractController {
   #[OA\Response(
     response: 200,
     description: 'Returns one event with given ID.',
-    content: new Model(type: Event::class)
+    content: new OA\JsonContent(
+      allOf: [
+        new OA\Schema(ref: new Model(type: Event::class)),
+        new OA\Schema(
+          properties: [
+            new OA\Property(property: 'pitchCnt', description: 'Number of pitches in this event', example: 199, type: 'integer'),
+          ]
+        )
+      ]
+    )
   )]
   #[OA\Response(
     response: 404,
@@ -252,6 +291,7 @@ final class EventController extends AbstractController {
       'city' => $event->getCity(),
       'country' => $event->getCountry()?->getId(),
       'details' => $event->getDetails(),
+      'pitchCnt' => count($event->getPitches()),
     ]);
   }
 

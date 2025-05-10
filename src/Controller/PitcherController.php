@@ -73,7 +73,16 @@ final class PitcherController extends AbstractController {
     description: 'Returns all pitchers.',
     content: new OA\JsonContent(
       type: 'array',
-      items: new OA\Items(ref: new Model(type: Pitcher::class))
+      items: new OA\Items(
+        allOf: [
+          new OA\Schema(ref: new Model(type: Pitcher::class)),
+          new OA\Schema(
+            properties: [
+              new OA\Property(property: 'pitchCnt', description: 'Number of pitches of this pitcher', example: 96, type: 'integer'),
+            ]
+          )
+        ]
+      )
     )
   )]
   #[OA\Response(
@@ -93,6 +102,7 @@ final class PitcherController extends AbstractController {
         'city' => $pitcher->getCity(),
         'country' => $pitcher->getCountry()?->getId(),
         'details' => $pitcher->getDetails(),
+        'pitchCnt' => count($pitcher->getPitches()),
       ];
     }, $pitchers));
   }
@@ -121,7 +131,16 @@ final class PitcherController extends AbstractController {
     description: 'Returns all pitchers with given organization.',
     content: new OA\JsonContent(
       type: 'array',
-      items: new OA\Items(ref: new Model(type: Pitcher::class))
+      items: new OA\Items(
+        allOf: [
+          new OA\Schema(ref: new Model(type: Pitcher::class)),
+          new OA\Schema(
+            properties: [
+              new OA\Property(property: 'pitchCnt', description: 'Number of pitches of this pitcher', example: 96, type: 'integer'),
+            ]
+          )
+        ]
+      )
     )
   )]
   #[OA\Response(
@@ -148,6 +167,7 @@ final class PitcherController extends AbstractController {
         'city' => $pitcher->getCity(),
         'country' => $pitcher->getCountry()?->getId(),
         'details' => $pitcher->getDetails(),
+        'pitchCnt' => count($pitcher->getPitches()),
       ];
     }, $pitchers->toArray()));
   }
@@ -176,7 +196,16 @@ final class PitcherController extends AbstractController {
     description: 'Returns all pitchers with given event.',
     content: new OA\JsonContent(
       type: 'array',
-      items: new OA\Items(ref: new Model(type: Pitcher::class))
+      items: new OA\Items(
+        allOf: [
+          new OA\Schema(ref: new Model(type: Pitcher::class)),
+          new OA\Schema(
+            properties: [
+              new OA\Property(property: 'pitchCnt', description: 'Number of pitches of this pitcher', example: 96, type: 'integer'),
+            ]
+          )
+        ]
+      )
     )
   )]
   #[OA\Response(
@@ -207,6 +236,7 @@ final class PitcherController extends AbstractController {
         'city' => $pitcher->getCity(),
         'country' => $pitcher->getCountry()?->getId(),
         'details' => $pitcher->getDetails(),
+        'pitchCnt' => count($pitcher->getPitches()),
       ];
     }, $pitchers));
   }
@@ -233,7 +263,16 @@ final class PitcherController extends AbstractController {
   #[OA\Response(
     response: 200,
     description: 'Returns one pitcher with given ID.',
-    content: new Model(type: Pitcher::class)
+    content: new OA\JsonContent(
+      allOf: [
+        new OA\Schema(ref: new Model(type: Pitcher::class)),
+        new OA\Schema(
+          properties: [
+            new OA\Property(property: 'pitchCnt', description: 'Number of pitches of this pitcher', example: 96, type: 'integer'),
+          ]
+        )
+      ]
+    )
   )]
   #[OA\Response(
     response: 404,
@@ -256,6 +295,7 @@ final class PitcherController extends AbstractController {
       'city' => $pitcher->getCity(),
       'country' => $pitcher->getCountry()?->getId(),
       'details' => $pitcher->getDetails(),
+      'pitchCnt' => count($pitcher->getPitches()),
     ]);
   }
 
