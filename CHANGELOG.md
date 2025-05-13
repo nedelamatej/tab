@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2025-05-13
+
+### Added
+
+- Added final touches.
+
+### Fixed
+
+- Fixed deployment issues.
+
 ## [1.0.0] - 2025-05-05
 
 ### Fixed

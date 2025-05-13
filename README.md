@@ -10,6 +10,8 @@ Backend part of softball pitch trajectories modeling and analysis application.
 - Backend URL: [tranim.nede.cz/api](https://tranim.nede.cz/api)
 - Backend API Documentation: [tranim.nede.cz/api/doc](https://tranim.nede.cz/api/doc)
 - Backend Doxygen Documentation: [tranim.nede.cz/be/doc](https://tranim.nede.cz/be/doc)
+- Frontend Repository: [github.com/nedelamatej/taf](https://github.com/nedelamatej/taf)
+- Backend Repository: [github.com/nedelamatej/tab](https://github.com/nedelamatej/tab)
 - Changelog: [CHANGELOG.md](./CHANGELOG.md)
 - License: [LICENSE.md](./LICENSE.md)
 
